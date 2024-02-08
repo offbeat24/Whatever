@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import LogoFull from '../../../public/Logo_Full.svg'
+import LogoIcon from '../../../public/Logo_Icon.svg'
 export default function Header() {
   return (
     <>
       <Link href="/">
         <Image 
-          src={LogoFull} 
+          src={LogoIcon} 
           alt=''
           width={196}
         />
