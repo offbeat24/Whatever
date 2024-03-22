@@ -1,11 +1,5 @@
-import Image from "next/image";
-
+import Image from 'next/image';
 
 export default function Home() {
-  return (
-    <>
-    
-    Next JS
-    </>
-  );
+  return <>Next JS</>;
 }
