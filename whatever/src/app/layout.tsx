@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import '../../styles/globals.css';
-import Header from './Header/layout';
+import Header from './Header/header';
 
 export const metadata: Metadata = {
   title: '아무거나',
