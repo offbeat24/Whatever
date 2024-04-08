@@ -11,7 +11,7 @@ export default function Home() {
           <p className='text-4xl'>오늘은 뭐 먹지? 더 이상 고민하지 마세요!</p>
           <article className='flex font-extrabold text-7xl items-center my-8'>
             <p>오늘은</p>
-            <div className='w-96 h-24 rounded-full shadow-xl mx-8'>
+            <div className='w-96 h-24 rounded-full content-around shadow-xl mx-8'>
               <Roulette />
             </div>
             <p>먹자!</p>

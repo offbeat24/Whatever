@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useCSVData = (): string[] => {
+const useCSVData = (): string[] => {
   const [data, setData] = useState<string[]>([]);
 
   useEffect(() => {
@@ -15,3 +15,5 @@ export const useCSVData = (): string[] => {
 
   return data;
 };
+
+export default useCSVData;

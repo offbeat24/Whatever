@@ -4,7 +4,7 @@ interface APIItem {
   name: string;
 }
 
-export const useAPIData = (): string[] => {
+const useAPIData = (): string[] => {
   const [data, setData] = useState<string[]>([]);
 
   useEffect(() => {
@@ -19,3 +19,5 @@ export const useAPIData = (): string[] => {
 
   return data;
 };
+
+export default useAPIData;
