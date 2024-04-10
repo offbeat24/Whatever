@@ -1,9 +1,28 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import ShuffleIcon from '../../../public/Shuffle.svg'; // 확인이 필요한 경로
+import ShuffleIcon from '../../../public/Shuffle.svg'; 
 
-export default function Roulette() {
+interface Props {
+  textData : string[],
+  textClass: string,
+}
+export default function Roulette({textData, textClass}: Props): JSX.Element {
+  const [textListIndex, setTextListIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTextListIndex(Math.floor(Math.random() * 361));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [textData]);
+
   return(
-    <p className=''>아무거나</p>
+    <div className='flex'>
+      <p className={textClass}>{textData[textListIndex]}</p>
+    </div>
+    
   );
 }
