@@ -4,7 +4,7 @@ import Roulette from './components/roulette';
 export default async function Home() {
 
   const foodList = await usedCSVData();
-
+  
   return (
     <main className='absolute top-0 left-0 w-full'>
       <div className='flex flex-col h-screen'>
@@ -15,8 +15,8 @@ export default async function Home() {
           <p className='text-4xl'>오늘은 뭐 먹지? 더 이상 고민하지 마세요!</p>
           <article className='flex font-extrabold text-7xl items-center my-8'>
             <p>오늘은</p>
-            <div className='w-96 h-24 rounded-full content-around shadow-xl mx-8'>
-              <Roulette textData={foodList} textClass=""/>
+            <div className='w-[510px] h-24 rounded-full content-around shadow-xl mx-8'>
+              <Roulette textData={foodList}/>
             </div>
             <p>먹자!</p>
           </article>
