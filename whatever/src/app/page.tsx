@@ -1,8 +1,9 @@
+import usedCSVData from '../hooks/usedCSVData';
 import Roulette from './components/roulette';
-import useCSVData from '../hooks/usedCSVData';
 
-export default function Home() {
-  const foodList = useCSVData();
+export default async function Home() {
+
+  const foodList = await usedCSVData();
 
   return (
     <main className='absolute top-0 left-0 w-full'>

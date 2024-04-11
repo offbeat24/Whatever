@@ -1,21 +1,12 @@
-"use client"
+import fs from 'fs';
+import path from 'path';
 
-import { useState, useEffect } from 'react';
+const DATA_FILE_PATH = 'src/data/foods_list.csv';
 
-const useCSVData = (): string[] => {
-  const [data, setData] = useState<string[]>([]);
+export default async function usedCSVData () {
+  const filePath = path.join(process.cwd(), DATA_FILE_PATH);
+  const data = fs.readFileSync(filePath, 'utf8');
+  const foodList = data.split('\n').map((row) => row.split(',')[0]);
 
-  useEffect(() => {
-    fetch('/foods_list.csv')
-      .then(response => response.text())
-      .then(text => {
-        const rows = text.split('\n').map(row => row.split(',')[0]);
-        setData(rows);
-      })
-      .catch(error => console.error('CSV 데이터 불러오기 실패:', error));
-  }, []);
-
-  return data;
+  return foodList;
 };
-
-export default useCSVData;
