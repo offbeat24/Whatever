@@ -30,7 +30,7 @@ export default function Roulette({textData }: Props): JSX.Element {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => prev < lastIndex ? prev + 1 : prev);
-    }, getDuration(10, currentIndex));
+    }, getDuration(15, currentIndex));
 
     return () => clearInterval(interval);
   }, [currentIndex, lastIndex, count]);
@@ -76,7 +76,7 @@ export default function Roulette({textData }: Props): JSX.Element {
           );
         })}
       </AnimatePresence>
-      <motion.button className="mr-[650px]" onClick={handleClick} whileTap={{ scale: 0.9, scaleY: 1 }} whileHover={{ scaleY: -1 }}>
+      <motion.button className="" onClick={handleClick} whileTap={{ scale: 0.9, scaleY: 1 }} whileHover={{ scaleY: -1 }}>
         <Image src={ShuffleIcon} alt='shuffle' color={buttonColor} width={56} height={56} />
       </motion.button>
     </div>
