@@ -16,30 +16,53 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({textData }: Props): JSX.Element {
-  // const [textListIndex, setTextListIndex] = useState(0);
-  const [count, setCount] = useState(0);
+export default function Roulette({ textData }: Props): JSX.Element {
+  const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const lastIndex = textData.length - 1 - count;
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const maxIndexCount = 40;
   const buttonColor = 'rgb(75, 85, 99)';
 
-  function getDuration(base: number, index: number) {
-    return base * (index + 1) * 0.5;
-  }
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => prev < lastIndex ? prev + 1 : prev);
-    }, getDuration(15, currentIndex));
+  const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
-    return () => clearInterval(interval);
-  }, [currentIndex, lastIndex, count]);
+  const getRandomNumbers = (count: number, min: number, max: number): number[] => {
+    const numbers: Set<number> = new Set(); 
+  
+    while(numbers.size < count) {
+        const random: number = Math.floor(Math.random() * (max - min + 1)) + min; // min과 max 사이의 난수 생성
+        numbers.add(random); 
+    }
+  
+    return Array.from(numbers); 
+  }
+
+  const itemsToShow = randomIndices.map(index => textData[index]);
+
+  useEffect(() => {
+    // 최초 마운트시에 40개의 무작위 인덱스를 선택
+    setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+  }, [textData.length]);
+
+  useEffect(() => {
+    if (currentIndex < maxIndexCount - 1) {
+      const id = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % maxIndexCount);
+      }, getDuration(10, currentIndex));
+      setIntervalId(id);
+      return () => clearInterval(id);
+    } 
+      clearInterval(intervalId as NodeJS.Timeout);
+    
+  }, [currentIndex, maxIndexCount]);
 
   function handleClick() {
-    setCurrentIndex(0);
-    setCount((prev) => prev < textData.length - 1 ? prev + 1 : 0);
+    if (currentIndex >= maxIndexCount - 1) {
+      setCurrentIndex(0);
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+    }
   }
 
+  
   const variants: Variants = {
     initial: { scaleY: 0.3, y: '-50%', opacity: 0 },
     animate: ({ isLast }) => {
@@ -55,8 +78,8 @@ export default function Roulette({textData }: Props): JSX.Element {
   return(
     <div className='justify-items-center'>
       <AnimatePresence mode="popLayout">
-        {textData.map((item, i) => {
-          const isLast = i === textData.length - 1;
+        {itemsToShow.map((item, i) => {
+          const isLast = i === itemsToShow.length - 1;
 
           return (
             i === currentIndex && (
