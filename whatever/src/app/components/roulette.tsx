@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import ShuffleIcon from '../../../public/Shuffle.svg'; 
 
@@ -19,9 +18,8 @@ interface VariantProps {
 export default function Roulette({ textData }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
-  const maxIndexCount = 40;
-  const buttonColor = 'rgb(75, 85, 99)';
+  const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
+  const maxIndexCount = 24;
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
@@ -39,28 +37,36 @@ export default function Roulette({ textData }: Props): JSX.Element {
   const itemsToShow = randomIndices.map(index => textData[index]);
 
   useEffect(() => {
-    // 최초 마운트시에 40개의 무작위 인덱스를 선택
-    setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
-  }, [textData.length]);
-
-  useEffect(() => {
-    if (currentIndex < maxIndexCount - 1) {
-      const id = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % maxIndexCount);
-      }, getDuration(10, currentIndex));
-      setIntervalId(id);
-      return () => clearInterval(id);
-    } 
-      clearInterval(intervalId as NodeJS.Timeout);
-    
-  }, [currentIndex, maxIndexCount]);
-
-  function handleClick() {
-    if (currentIndex >= maxIndexCount - 1) {
-      setCurrentIndex(0);
+    if (!initialTextDisplayed) { // 초기 텍스트가 표시된 후에만 인덱스 순환 시작
       setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
     }
-  }
+  }, [textData.length, initialTextDisplayed]);
+
+  useEffect(() => {
+    let intervalId = null; // 인터벌 ID를 로컬 변수로 선언
+  
+    if (currentIndex < maxIndexCount - 1) {
+      intervalId = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % maxIndexCount);
+      }, getDuration(10, currentIndex));
+    }
+  
+    // 컴포넌트 언마운트 시 또는 의존성 배열의 값이 변경될 때 인터벌 정리
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [currentIndex, maxIndexCount, initialTextDisplayed]);
+  
+
+  const handleClick = () => {
+    if (initialTextDisplayed) {
+      setInitialTextDisplayed(false); // 버튼 클릭 시 초기 텍스트 상태 변경
+    } else if (currentIndex >= maxIndexCount - 1) {
+      setCurrentIndex(0);
+    }
+  };
 
   
   const variants: Variants = {
@@ -76,15 +82,20 @@ export default function Roulette({ textData }: Props): JSX.Element {
 
 
   return(
-    <div className='justify-items-center'>
+    <div className='flex justify-between justify-items-center font-extrabold px-9'>
       <AnimatePresence mode="popLayout">
-        {itemsToShow.map((item, i) => {
+        {initialTextDisplayed ? (
+            <motion.p className="overflow-hidden text-7xl font-pretendard font-extrabold" key="initial">
+              아무거나
+            </motion.p>
+          ) : (
+        itemsToShow.map((item, i) => {
           const isLast = i === itemsToShow.length - 1;
 
           return (
             i === currentIndex && (
               <motion.p
-                className="overflow-hidden text-7xl font-thin"
+                className="overflow-hidden text-7xl font-pretendard font-extrabold"
                 key={item}
                 custom={{ isLast }}
                 variants={variants}
@@ -96,11 +107,11 @@ export default function Roulette({ textData }: Props): JSX.Element {
                 {item}
               </motion.p>
             )
-          );
-        })}
+          )
+    }))}
       </AnimatePresence>
-      <motion.button className="" onClick={handleClick} whileTap={{ scale: 0.9, scaleY: 1 }} whileHover={{ scaleY: -1 }}>
-        <Image src={ShuffleIcon} alt='shuffle' color={buttonColor} width={56} height={56} />
+      <motion.button className="" onClick={handleClick} whileTap={{ rotate: 720 }} whileHover={{ rotate: 90 }} style={{ originX: 0.5, originY: 0.5 }}>
+        <ShuffleIcon style={{ fill: "#646464" }} width={42} height={42} />
       </motion.button>
     </div>
     

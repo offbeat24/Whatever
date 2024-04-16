@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <main className='absolute top-0 left-0 w-full'>
       <div className='flex flex-col h-screen'>
-        <section className='h-3/5  bg-custom-image bg-cover bg-center relative ' >
+        <section className='h-[648px]  bg-custom-image bg-cover bg-center relative ' >
           <div className ='absolute top-0 left-0 w-full h-full bg-black bg-opacity-50' />
         </section>
         <section className='h-2/5 bg-stone-200 font-pretendard flex flex-col justify-center items-center text-center'>
@@ -21,6 +21,9 @@ export default async function Home() {
             <p>먹자!</p>
           </article>
         </ section>
+        <section className='flex h-[86px] bg-[#FFA114] justify-center items-center text-center'>
+          <p className='font-pretendard font-extrabold text-3xl'>메뉴 고르기</p>
+        </section>
       </div>
     </main>
   );
