@@ -62,9 +62,11 @@ export default function Roulette({ textData }: Props): JSX.Element {
 
   const handleClick = () => {
     if (initialTextDisplayed) {
-      setInitialTextDisplayed(false); // 버튼 클릭 시 초기 텍스트 상태 변경
+      setInitialTextDisplayed(false);
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1)); // 버튼 클릭 시 초기 텍스트 상태 변경
     } else if (currentIndex >= maxIndexCount - 1) {
       setCurrentIndex(0);
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
     }
   };
 
@@ -82,36 +84,38 @@ export default function Roulette({ textData }: Props): JSX.Element {
 
 
   return(
-    <div className='flex justify-between justify-items-center font-extrabold px-9'>
-      <AnimatePresence mode="popLayout">
-        {initialTextDisplayed ? (
-            <motion.p className="overflow-hidden text-7xl font-pretendard font-extrabold" key="initial">
-              아무거나
-            </motion.p>
-          ) : (
-        itemsToShow.map((item, i) => {
-          const isLast = i === itemsToShow.length - 1;
-
-          return (
-            i === currentIndex && (
-              <motion.p
-                className="overflow-hidden text-7xl font-pretendard font-extrabold"
-                key={item}
-                custom={{ isLast }}
-                variants={variants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: getDuration(isLast ? 0.1 : 0.01, i), ease: isLast ? 'easeInOut' : 'linear' }}
-              >
-                {item}
+    <div className='flex justify-between items-center font-extrabold px-9'>
+      <div className='flex-grow text-center'>
+        <AnimatePresence mode="popLayout" >
+          {initialTextDisplayed ? (
+              <motion.p className="overflow-hidden text-7xl font-pretendard font-extrabold" key="initial">
+                아무거나
               </motion.p>
+            ) : (
+          itemsToShow.map((item, i) => {
+            const isLast = i === itemsToShow.length - 1;
+
+            return (
+              i === currentIndex && (
+                <motion.p
+                  className="overflow-hidden text-7xl font-pretendard font-extrabold align-middle"
+                  key={item}
+                  custom={{ isLast }}
+                  variants={variants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  transition={{ duration: getDuration(isLast ? 0.1 : 0.01, i), ease: isLast ? 'easeInOut' : 'linear' }}
+                >
+                  {item}
+                </motion.p>
+              )
             )
-          )
-    }))}
-      </AnimatePresence>
-      <motion.button className="" onClick={handleClick} whileTap={{ rotate: 720 }} whileHover={{ rotate: 90 }} style={{ originX: 0.5, originY: 0.5 }}>
-        <ShuffleIcon style={{ fill: "#646464" }} width={42} height={42} />
+      }))}
+        </AnimatePresence>
+      </div>
+      <motion.button className="ml-auto" onClick={handleClick} whileTap={{ rotate: 720 }} whileHover={{ rotate: 90 }} style={{ originX: 0.5, originY: 0.5 }}>
+        <ShuffleIcon style={{ fill: "#646464" }} width={35} height={35} />
       </motion.button>
     </div>
     

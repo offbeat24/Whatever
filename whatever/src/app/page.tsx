@@ -1,4 +1,5 @@
 import usedCSVData from '../hooks/usedCSVData';
+import Card from './components/card';
 import Roulette from './components/roulette';
 
 export default async function Home() {
@@ -9,7 +10,14 @@ export default async function Home() {
     <main className='absolute top-0 left-0 w-full'>
       <div className='flex flex-col h-screen'>
         <section className='h-[648px]  bg-custom-image bg-cover bg-center relative ' >
-          <div className ='absolute top-0 left-0 w-full h-full bg-black bg-opacity-50' />
+          <div className ='absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center'>
+            <div className='grid grid-cols-4 justify-items-center gap-x-[33px]'>
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+            </div>
+          </div>
         </section>
         <section className='h-2/5 bg-stone-200 font-pretendard flex flex-col justify-center items-center text-center'>
           <p className='text-4xl'>오늘은 뭐 먹지? 더 이상 고민하지 마세요!</p>
