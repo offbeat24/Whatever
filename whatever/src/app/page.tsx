@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import usedCSVData from '../hooks/usedCSVData';
 import Card from './components/card';
 import Roulette from './components/roulette';
@@ -29,9 +30,11 @@ export default async function Home() {
             <p>먹자!</p>
           </article>
         </ section>
-        <section className='flex h-[86px] bg-[#FFA114] justify-center items-center text-center'>
-          <p className='font-pretendard font-extrabold text-3xl'>메뉴 고르기</p>
-        </section>
+        <Link href="/RandomOnMap">
+          <section className='flex h-[86px] bg-[#FFA114] justify-center items-center text-center'>
+            <p className='font-pretendard font-extrabold text-3xl'>메뉴 고르기</p>
+          </section>
+        </Link>
       </div>
     </main>
   );
