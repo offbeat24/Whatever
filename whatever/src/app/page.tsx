@@ -30,7 +30,7 @@ export default async function Home() {
             <p>먹자!</p>
           </article>
         </ section>
-        <Link href="/RandomOnMap">
+        <Link href="/random">
           <section className='flex h-[86px] bg-[#FFA114] justify-center items-center text-center'>
             <p className='font-pretendard font-extrabold text-3xl'>메뉴 고르기</p>
           </section>
