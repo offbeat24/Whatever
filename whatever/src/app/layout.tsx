@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import '../../styles/globals.css';
+import Script from 'next/script';
 import Header from './Header/header';
+
 
 export const metadata: Metadata = {
   title: '아무거나',
@@ -22,6 +24,10 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <body >
+        <Script
+            strategy="beforeInteractive"
+            src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_MAP_KEY}&autoload=false`}
+          />
         <Header />
         {children}
       </body>
