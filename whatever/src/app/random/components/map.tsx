@@ -1,27 +1,52 @@
 'use client'
 
-import { useEffect, useRef } from 'react';
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
+import { useEffect, useState } from 'react';
+import { Map } from 'react-kakao-maps-sdk';
+import useKakaoLoader from '../../../hooks/useKakaoLoader';
 
 export default function FoodMap() {
-  const mapRef = useRef<HTMLDivElement>(null);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>({
+    latitude: 33.450701,
+    longitude: 126.570667
+  });
 
-  useEffect(() => {
-    window.kakao.maps.load(() => {
-      const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
+  useEffect(()=> {
+    const getUserLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+  
+            setUserLocation({ latitude, longitude });
+          },
+  
+          (error) => {
+            console.error("Error get user location: ", error);
+          }
+        );
+      } else {
+        console.log("Geolocation is not supported by this browser");
+      } 
+    };
+    getUserLocation();
+  },[]);
+  useKakaoLoader()
 
-      const map = new window.kakao.maps.Map(mapRef.current, options);
-    });
-  }, []);
-  return (
-    <div className='w-[1650px] h-[880px]' ref={mapRef} id='map'/>
+  return(
+    <Map
+      id="map"
+      center={{
+        lat: userLocation?.latitude!,
+        lng: userLocation?.longitude!,
+      }}
+      style={{
+        width: "1650px",
+        height: "880px",
+      }}
+      level={3}
+    />
   )
 }
