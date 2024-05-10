@@ -12,27 +12,26 @@ export default function FoodMap() {
     latitude: 33.450701,
     longitude: 126.570667
   });
+  const { kakao } = window;
+  const getMapInfo = () => {
+  }
+  const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
+    setUserLocation({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    })
+  }
+  const reject = () => {
+    setUserLocation({
+      latitude: 33.450701,
+      longitude: 126.570667
+    })
+  }
 
-  useEffect(()=> {
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(approve, reject);
+  }, []);
   
-            setUserLocation({ latitude, longitude });
-          },
-  
-          (error) => {
-            console.error("Error get user location: ", error);
-          }
-        );
-      } else {
-        console.log("Geolocation is not supported by this browser");
-      } 
-    };
-    getUserLocation();
-  },[]);
   useKakaoLoader()
 
   return(
@@ -47,6 +46,7 @@ export default function FoodMap() {
         height: "880px",
       }}
       level={3}
+      onBoundsChanged={getMapInfo}
     />
   )
 }
