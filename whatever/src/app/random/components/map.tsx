@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 
@@ -12,9 +12,11 @@ export default function FoodMap() {
     latitude: 33.450701,
     longitude: 126.570667
   });
-  const { kakao } = window;
-  const getMapInfo = () => {
-  }
+  const [bound, setBound] = useState<{
+    sw: string,
+    ne: string
+  }>();
+  
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
     setUserLocation({
       latitude: position.coords.latitude,
@@ -46,7 +48,14 @@ export default function FoodMap() {
         height: "880px",
       }}
       level={3}
-      onBoundsChanged={getMapInfo}
+      onBoundsChanged={(map) => {
+        const bounds = map.getBounds()
+        setBound({
+          sw: bounds.getSouthWest().toString(),
+          ne: bounds.getNorthEast().toString(),
+        })
+        console.log(bound)
+      }}
     />
   )
 }
