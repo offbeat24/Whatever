@@ -13,8 +13,8 @@ export default function FoodMap() {
     longitude: 126.570667
   });
   const [bound, setBound] = useState<{
-    sw: string,
-    ne: string
+    sw: kakao.maps.LatLng,
+    ne: kakao.maps.LatLng
   }>();
   
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -30,10 +30,20 @@ export default function FoodMap() {
     })
   }
 
+  const search = (result: any) => {
+    console.log(result)
+  }
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(approve, reject);
   }, []);
-  
+  useEffect(() => {
+    const ps = new kakao.maps.services.Places();
+    ps.categorySearch("FD6", search, {
+      bounds: new kakao.maps.LatLngBounds(bound?.sw , bound?.ne),
+      size: 15,
+      page: 4
+    });
+  })
   useKakaoLoader()
 
   return(
@@ -51,10 +61,9 @@ export default function FoodMap() {
       onBoundsChanged={(map) => {
         const bounds = map.getBounds()
         setBound({
-          sw: bounds.getSouthWest().toString(),
-          ne: bounds.getNorthEast().toString(),
+          sw: bounds.getSouthWest(),
+          ne: bounds.getNorthEast(),
         })
-        console.log(bound)
       }}
     />
   )
