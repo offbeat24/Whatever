@@ -6,6 +6,8 @@ import ShuffleIcon from '../../../public/Shuffle.svg';
 
 interface Props {
   textData : string[],
+  dataFromMap?: string[],
+  onShuffle?: () => void,
 }
 
 interface VariantProps {
@@ -15,11 +17,12 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({ textData }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap, onShuffle }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
   const maxIndexCount = 24;
+  const data = textData || dataFromMap || [];
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
@@ -38,12 +41,12 @@ export default function Roulette({ textData }: Props): JSX.Element {
 
   useEffect(() => {
     if (!initialTextDisplayed) { // 초기 텍스트가 표시된 후에만 인덱스 순환 시작
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, data.length - 1));
     }
-  }, [textData.length, initialTextDisplayed]);
+  }, [data.length, initialTextDisplayed]);
 
   useEffect(() => {
-    let intervalId = null; // 인터벌 ID를 로컬 변수로 선언
+    let intervalId: NodeJS.Timeout | null = null; // 인터벌 ID를 로컬 변수로 선언
   
     if (currentIndex < maxIndexCount - 1) {
       intervalId = setInterval(() => {
@@ -61,12 +64,15 @@ export default function Roulette({ textData }: Props): JSX.Element {
   
 
   const handleClick = () => {
+    if (onShuffle) {
+      onShuffle();
+    }
     if (initialTextDisplayed) {
       setInitialTextDisplayed(false);
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1)); // 버튼 클릭 시 초기 텍스트 상태 변경
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, data.length - 1)); // 버튼 클릭 시 초기 텍스트 상태 변경
     } else if (currentIndex >= maxIndexCount - 1) {
       setCurrentIndex(0);
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+      setRandomIndices(getRandomNumbers(maxIndexCount, 0, data.length - 1));
     }
   };
 
