@@ -6,8 +6,8 @@ import ShuffleIcon from '../../../public/Shuffle.svg';
 
 interface Props {
   textData : string[],
-  dataFromMap?: string[],
-  onShuffle?: () => void,
+  dataFromMap: string[],
+  onShuffle: () => void,
 }
 
 interface VariantProps {
@@ -37,13 +37,13 @@ export default function Roulette({ textData, dataFromMap, onShuffle }: Props): J
     return Array.from(numbers); 
   }
 
-  const itemsToShow = randomIndices.map(index => textData[index]);
+  const itemsToShow = randomIndices.map(index => data[index]);
 
   useEffect(() => {
     if (!initialTextDisplayed) { // 초기 텍스트가 표시된 후에만 인덱스 순환 시작
       setRandomIndices(getRandomNumbers(maxIndexCount, 0, data.length - 1));
     }
-  }, [data.length, initialTextDisplayed]);
+  }, [data, initialTextDisplayed]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null; // 인터벌 ID를 로컬 변수로 선언

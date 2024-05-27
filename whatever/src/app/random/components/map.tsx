@@ -36,6 +36,7 @@ export default function FoodMap() {
 
   const search = (result: any) => {
     setMergedResults(result.map((place: any) => place.place_name));
+    console.log(mergedResults);
   };
 
   const fetchPlaces = async () => {
