@@ -22,6 +22,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
+  const [showPlace, setShowPlace] = useState(false);
   const maxIndexCount = 24;
   const data = textData.length > 0 ? textData : dataFromMap.map(place => place.place_name);
 
@@ -44,6 +45,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
       setRandomIndices(newIndices);
       setCurrentIndex(0);
+      setShowPlace(false);
     }
   }, [data.length, initialTextDisplayed]); 
 
@@ -54,6 +56,10 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       intervalId = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % itemsToShow.length);
       }, getDuration(10, currentIndex));
+    } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0) {
+      const selectedPlace = dataFromMap[randomIndices[currentIndex]];
+      onPlaceSelected(selectedPlace);
+      setShowPlace(true);
     }
   
     // 컴포넌트 언마운트 시 또는 의존성 배열의 값이 변경될 때 인터벌 정리
@@ -75,10 +81,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       setRandomIndices(newIndices);
       setCurrentIndex(0);
       setInitialTextDisplayed(false);
-      if (newIndices.length > 0) {
-        const selectedPlace = dataFromMap[newIndices[0]]; // 첫 번째 랜덤 인덱스를 선택된 장소로 설정
-        onPlaceSelected(selectedPlace);
-      }
+      setShowPlace(false);
     } else {
       console.warn("No data available to shuffle.");
     }

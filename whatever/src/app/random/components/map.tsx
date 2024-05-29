@@ -17,22 +17,30 @@ export default function FoodMap() {
     sw: kakao.maps.LatLng,
     ne: kakao.maps.LatLng
   } | null>(null);
+  const [loc, setLoc] = useState<{
+    latitude: number,
+    longitude: number
+  } | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
 
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
-    setUserLocation({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    })
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    setUserLocation({ latitude: lat, longitude: lon });
+    setLoc({ latitude: lat, longitude: lon });
   }
   const reject = () => {
     setUserLocation({
       latitude: 33.450701,
       longitude: 126.570667
     })
+    setLoc({
+      latitude: 33.450701,
+      longitude: 126.570667
+    });
   }
 
   const fetchPlaces = async () => {
@@ -72,6 +80,16 @@ export default function FoodMap() {
 
   const handlePlaceSelected = (place: any) => {
     setSelectedPlace(place);
+    setPlaces([place]); // 선택된 장소만 places로 설정
+  };
+
+  const handleResetLocation = () => {
+    if (userLocation) {
+      setLoc({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+      })
+    }
   };
 
   return(
@@ -79,8 +97,8 @@ export default function FoodMap() {
       <Map
         id="map"
         center={{
-          lat: userLocation?.latitude!,
-          lng: userLocation?.longitude!,
+          lat: loc?.latitude!,
+          lng: loc?.longitude!,
         }}
         style={{
           width: "1650px",
@@ -95,24 +113,25 @@ export default function FoodMap() {
           })
         }}
       >
-        {places.map((place) => (
+        {selectedPlace && (
           <MapMarker
-            key={place.id}
-            position={{ lat: place.y, lng: place.x }}
-            title={place.place_name}
+            key={selectedPlace.id}
+            position={{ lat: selectedPlace.y, lng: selectedPlace.x }}
+            title={selectedPlace.place_name}
           >
-            {selectedPlace && selectedPlace.id === place.id && (
-              <MapInfoWindow position={{ lat: place.y, lng: place.x }}>
-                <div style={{ padding: '5px', color: '#000' }}>
-                  <h4>{place.place_name}</h4>
-                  <p>{place.address_name}</p>
-                </div>
-              </MapInfoWindow>
-            )}
+            <MapInfoWindow position={{ lat: selectedPlace.y, lng: selectedPlace.x }}>
+              <div style={{ padding: '5px', color: '#000' }}>
+                <h4>{selectedPlace.place_name}</h4>
+                <p>{selectedPlace.address_name}</p>
+              </div>
+            </MapInfoWindow>
           </MapMarker>
-        ))}
+        )}
       </Map>
       <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
+      <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
+        현재 위치로 돌아가기
+      </button>
     </div>
   )
 }
