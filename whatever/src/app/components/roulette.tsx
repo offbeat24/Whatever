@@ -8,6 +8,7 @@ interface Props {
   textData : string[],
   dataFromMap : any[],
   onShuffle : () => Promise<void>,
+  onPlaceSelected: (place: any) => void,
 }
 
 interface VariantProps {
@@ -17,7 +18,7 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({ textData, dataFromMap, onShuffle }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSelected }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
@@ -74,6 +75,12 @@ export default function Roulette({ textData, dataFromMap, onShuffle }: Props): J
       setRandomIndices(newIndices);
       setCurrentIndex(0);
       setInitialTextDisplayed(false);
+      if (newIndices.length > 0) {
+        const selectedPlace = dataFromMap[newIndices[0]]; // 첫 번째 랜덤 인덱스를 선택된 장소로 설정
+        onPlaceSelected(selectedPlace);
+      }
+    } else {
+      console.warn("No data available to shuffle.");
     }
   };
 

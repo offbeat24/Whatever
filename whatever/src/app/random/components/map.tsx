@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState} from 'react';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
 
@@ -18,6 +18,7 @@ export default function FoodMap() {
     ne: kakao.maps.LatLng
   } | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
 
   useKakaoLoader();
 
@@ -38,12 +39,12 @@ export default function FoodMap() {
     if (!bound) return;
     const ps = new window.kakao.maps.services.Places();
     const promises = [1, 2, 3].map((pages) =>
-      new Promise((resolve, failed) => {
+      new Promise((resolve) => {
         ps.categorySearch("FD6", (result, status) => {
           if (status === window.kakao.maps.services.Status.OK) {
             resolve(result);
           } else {
-            reject(status);
+            resolve([]);
           }
         }, {
           bounds: new window.kakao.maps.LatLngBounds(bound.sw, bound.ne),
@@ -56,15 +57,22 @@ export default function FoodMap() {
     try {
       const results = await Promise.all(promises);
       const allResults = results.flat();
-      setPlaces(allResults);
+      if (allResults.length > 0) {
+        setPlaces(allResults);
+      } else {
+        console.warn("No places found in the current bounds.");
+      }
     } catch (error) {
       console.error("Failed to fetch places: ", error);
     }
   };
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(approve, reject);
   }, []);
+
+  const handlePlaceSelected = (place: any) => {
+    setSelectedPlace(place);
+  };
 
   return(
     <div>
@@ -88,14 +96,23 @@ export default function FoodMap() {
         }}
       >
         {places.map((place) => (
-            <MapMarker
-              key={place.id}
-              position={{ lat: place.y, lng: place.x }}
-              title={place.place_name}
-            />
-          ))}
+          <MapMarker
+            key={place.id}
+            position={{ lat: place.y, lng: place.x }}
+            title={place.place_name}
+          >
+            {selectedPlace && selectedPlace.id === place.id && (
+              <MapInfoWindow position={{ lat: place.y, lng: place.x }}>
+                <div style={{ padding: '5px', color: '#000' }}>
+                  <h4>{place.place_name}</h4>
+                  <p>{place.address_name}</p>
+                </div>
+              </MapInfoWindow>
+            )}
+          </MapMarker>
+        ))}
       </Map>
-      <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} />
+      <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
     </div>
   )
 }
