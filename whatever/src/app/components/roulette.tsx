@@ -22,9 +22,8 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
-  const [showPlace, setShowPlace] = useState(false);
   const maxIndexCount = 24;
-  const data = textData.length > 0 ? textData : dataFromMap.map(place => place.place_name);
+  
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
@@ -38,6 +37,18 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
     return Array.from(numbers); 
   }
 
+  const formatPlaceName = (name: string): string => {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      const lastWord = words[words.length - 1];
+      if (lastWord.indexOf('점') !== -1) {
+        return words.slice(0, -1).join(' ');
+      }
+    }
+    return name
+  }
+
+  const data = textData.length > 0 ? textData : dataFromMap.map(place => formatPlaceName(place.place_name));
   const itemsToShow = randomIndices.map(index => data[index]);
 
   useEffect(() => {
@@ -45,7 +56,6 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
       setRandomIndices(newIndices);
       setCurrentIndex(0);
-      setShowPlace(false);
     }
   }, [data.length, initialTextDisplayed]); 
 
@@ -59,7 +69,6 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
     } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0) {
       const selectedPlace = dataFromMap[randomIndices[currentIndex]];
       onPlaceSelected(selectedPlace);
-      setShowPlace(true);
     }
   
     // 컴포넌트 언마운트 시 또는 의존성 배열의 값이 변경될 때 인터벌 정리
@@ -68,6 +77,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
         clearInterval(intervalId);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, itemsToShow.length]);
   
 
@@ -81,7 +91,6 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       setRandomIndices(newIndices);
       setCurrentIndex(0);
       setInitialTextDisplayed(false);
-      setShowPlace(false);
     } else {
       console.warn("No data available to shuffle.");
     }
@@ -116,7 +125,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
               i === currentIndex && (
                 <motion.p
                   className="overflow-hidden text-7xl font-pretendard font-extrabold align-middle"
-                  key={item}
+                  key={randomIndices[i]}
                   custom={{ isLast }}
                   variants={variants}
                   initial="initial"

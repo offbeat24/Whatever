@@ -2,6 +2,7 @@
 
 import { useEffect, useState} from 'react';
 import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
+import Image from 'next/image';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
 
@@ -23,7 +24,8 @@ export default function FoodMap() {
   } | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
-
+  const [mapLoaded, setMapLoaded] = useState(false); 
+  const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -45,7 +47,7 @@ export default function FoodMap() {
 
   const fetchPlaces = async () => {
     if (!bound) return;
-    const ps = new window.kakao.maps.services.Places();
+    const ps = new window.kakao.maps.services.Places(); 
     const promises = [1, 2, 3].map((pages) =>
       new Promise((resolve) => {
         ps.categorySearch("FD6", (result, status) => {
@@ -69,6 +71,7 @@ export default function FoodMap() {
         setPlaces(allResults);
       } else {
         console.warn("No places found in the current bounds.");
+        setPlaces([]); 
       }
     } catch (error) {
       console.error("Failed to fetch places: ", error);
@@ -92,6 +95,33 @@ export default function FoodMap() {
     }
   };
 
+  const handleMapLoad = (map: kakao.maps.Map) => {
+    if (!mapLoaded) {
+      const bounds = map.getBounds();
+      setBound({
+        sw: bounds.getSouthWest(),
+        ne: bounds.getNorthEast(),
+      });
+      setMapLoaded(true); // 지도 로드 상태를 true로 설정합니다.
+    }
+  };
+
+  const handleBoundsChange = (map: kakao.maps.Map) => {
+    const bounds = map.getBounds();
+    setBound({
+      sw: bounds.getSouthWest(),
+      ne: bounds.getNorthEast(),
+    });
+    setMapBoundsChanged(true); // 지도 경계 변경 상태 설정
+  };
+
+  useEffect(() => {
+    if (mapLoaded && bound) {
+      fetchPlaces();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapLoaded, mapBoundsChanged]);
+
   return(
     <div>
       <Map
@@ -105,19 +135,27 @@ export default function FoodMap() {
           height: "880px",
         }}
         level={3}
-        onBoundsChanged={(map) => {
-          const bounds = map.getBounds()
-          setBound({
-            sw: bounds.getSouthWest(),
-            ne: bounds.getNorthEast(),
-          })
-        }}
+        onCreate={handleMapLoad}
+        onBoundsChanged={handleBoundsChange}
       >
         {selectedPlace && (
           <MapMarker
             key={selectedPlace.id}
             position={{ lat: selectedPlace.y, lng: selectedPlace.x }}
             title={selectedPlace.place_name}
+            image={{
+              src: '/logo-pin-1.svg',
+              size: {
+                width: 68,
+                height: 85,
+              }, // 마커이미지의 크기입니다
+              options: {
+                offset: {
+                  x: 27,
+                  y: 69,
+                }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              }
+            }}
           >
             <MapInfoWindow position={{ lat: selectedPlace.y, lng: selectedPlace.x }}>
               <div style={{ padding: '5px', color: '#000' }}>
