@@ -6,6 +6,9 @@ import ShuffleIcon from '../../../public/Shuffle.svg';
 
 interface Props {
   textData : string[],
+  dataFromMap : any[],
+  onShuffle : () => Promise<void>,
+  onPlaceSelected: (place: any) => void,
 }
 
 interface VariantProps {
@@ -15,11 +18,12 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({ textData }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSelected }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
   const maxIndexCount = 24;
+  
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
@@ -30,25 +34,41 @@ export default function Roulette({ textData }: Props): JSX.Element {
         const random: number = Math.floor(Math.random() * (max - min + 1)) + min; // min과 max 사이의 난수 생성
         numbers.add(random); 
     }
-  
     return Array.from(numbers); 
   }
 
-  const itemsToShow = randomIndices.map(index => textData[index]);
-
-  useEffect(() => {
-    if (!initialTextDisplayed) { // 초기 텍스트가 표시된 후에만 인덱스 순환 시작
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+  const formatPlaceName = (name: string): string => {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      const lastWord = words[words.length - 1];
+      if (lastWord.indexOf('점') !== -1) {
+        return words.slice(0, -1).join(' ');
+      }
     }
-  }, [textData.length, initialTextDisplayed]);
+    return name
+  }
+
+  const data = textData.length > 0 ? textData : dataFromMap.map(place => formatPlaceName(place.place_name));
+  const itemsToShow = randomIndices.map(index => data[index]);
 
   useEffect(() => {
-    let intervalId = null; // 인터벌 ID를 로컬 변수로 선언
+    if (!initialTextDisplayed && data.length > 0) {
+      const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
+      setRandomIndices(newIndices);
+      setCurrentIndex(0);
+    }
+  }, [data.length, initialTextDisplayed]); 
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null; // 인터벌 ID를 로컬 변수로 선언
   
-    if (currentIndex < maxIndexCount - 1) {
+    if (currentIndex < itemsToShow.length - 1) {
       intervalId = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % maxIndexCount);
+        setCurrentIndex((prev) => (prev + 1) % itemsToShow.length);
       }, getDuration(10, currentIndex));
+    } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0) {
+      const selectedPlace = dataFromMap[randomIndices[currentIndex]];
+      onPlaceSelected(selectedPlace);
     }
   
     // 컴포넌트 언마운트 시 또는 의존성 배열의 값이 변경될 때 인터벌 정리
@@ -57,16 +77,22 @@ export default function Roulette({ textData }: Props): JSX.Element {
         clearInterval(intervalId);
       }
     };
-  }, [currentIndex, maxIndexCount, initialTextDisplayed]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, itemsToShow.length]);
   
 
-  const handleClick = () => {
-    if (initialTextDisplayed) {
-      setInitialTextDisplayed(false);
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1)); // 버튼 클릭 시 초기 텍스트 상태 변경
-    } else if (currentIndex >= maxIndexCount - 1) {
+  const handleClick = async () => {
+    if (onShuffle) {
+      await onShuffle();
+    }
+
+    if (data.length > 0) {
+      const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
+      setRandomIndices(newIndices);
       setCurrentIndex(0);
-      setRandomIndices(getRandomNumbers(maxIndexCount, 0, textData.length - 1));
+      setInitialTextDisplayed(false);
+    } else {
+      console.warn("No data available to shuffle.");
     }
   };
 
@@ -99,7 +125,7 @@ export default function Roulette({ textData }: Props): JSX.Element {
               i === currentIndex && (
                 <motion.p
                   className="overflow-hidden text-7xl font-pretendard font-extrabold align-middle"
-                  key={item}
+                  key={randomIndices[i]}
                   custom={{ isLast }}
                   variants={variants}
                   initial="initial"
