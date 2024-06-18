@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import '../../styles/globals.css';
-import Header from './Header/header';
 
 
 export const metadata: Metadata = {
@@ -23,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <body >
-        <Header />
         {children}
       </body>
     </html>
