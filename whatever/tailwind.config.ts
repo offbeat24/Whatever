@@ -16,6 +16,17 @@ const config: Config = {
       fontFamily: {
         'pretendard': ['PretendardVariable', 'sans-serif']
       },
+      colors: {
+        snow: "#FFFFFF",
+        white: "#FAFAFA",
+        gray: "#C6C6C6",
+        black: "#141414",
+        orange: {
+          o1: "#F58700",
+          o2: "#FF9700",
+          o3: "#FFAB40"
+        }
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
