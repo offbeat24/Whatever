@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import usedCSVData from '../hooks/usedCSVData';
-import Card from './components/card';
 import Roulette from './components/roulette';
 import Header from './Header/header';
 
@@ -14,7 +13,7 @@ export default async function Home() {
       <main className='absolute top-0 left-0 w-full'>
         <div className='flex flex-col h-screen'>
           <section className='h-[67vh]  bg-custom-image bg-cover bg-center relative ' >
-            <div className ='absolute top-0 left-0 w-full h-full text-[4.375rem] text-xl bg-black bg-opacity-50 flex-col justify-center items-start'>
+            <div className ='absolute top-0 left-0 w-full h-full text-[4.375rem] font-extrabold bg-black bg-opacity-50 flex-col justify-center items-start'>
               <p className='text-white'>오늘은 뭐 먹지?</p>
               <p className='text-white'>더 이상 고민하지 마세요!</p>
             </div>
