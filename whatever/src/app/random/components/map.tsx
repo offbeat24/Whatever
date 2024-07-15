@@ -166,7 +166,7 @@ export default function FoodMap() {
           </MapMarker>
         )}
       </Map>
-      <div className="absolute space-x-10 bottom-0 left-0 z-10 flex flex-col justify-between p-4">
+      <div className="absolute space-x-10 bottom-0 right-0 z-10 flex flex-col justify-between p-4">
         <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
         <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
           현재 위치로 돌아가기

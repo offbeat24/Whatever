@@ -10,11 +10,12 @@ const config: Config = {
     screens: {
       'mobile': '360px',
       'tablet': '744px',
+      'tablet-l' : '1024px',
       'laptop' : '1280px'
     },
     extend: {
       fontFamily: {
-        'pretendard': ['PretendardVariable', 'sans-serif']
+        Pretendard: ['PretendardVariable', 'sans-serif']
       },
       colors: {
         snow: "#FFFFFF",

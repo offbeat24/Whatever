@@ -114,7 +114,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       <div className='flex-grow text-center'>
         <AnimatePresence mode="popLayout" >
           {initialTextDisplayed ? (
-              <motion.p className="overflow-hidden text-7xl font-pretendard font-extrabold" key="initial">
+              <motion.p className="overflow-hidden font-pretendard font-extrabold" key="initial">
                 아무거나
               </motion.p>
             ) : (
@@ -124,7 +124,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
             return (
               i === currentIndex && (
                 <motion.p
-                  className="overflow-hidden text-7xl font-pretendard font-extrabold align-middle"
+                  className="overflow-hidden font-pretendard font-extrabold align-middle"
                   key={randomIndices[i]}
                   custom={{ isLast }}
                   variants={variants}
