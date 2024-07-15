@@ -14,7 +14,7 @@ export default async function Home() {
       <Header />
       <main className='absolute top-0 left-0 w-full'>
         <div className='flex flex-col h-screen'>
-          <section className='h-[67vh]  bg-custom-image bg-cover bg-center relative flex items-center justify-center' >
+          <section className='laptop:min-h-[35rem] bg-custom-image bg-cover bg-center relative flex items-center justify-center' >
             <div className ='w-full h-full laptop:text-[4.375rem] tablet-l:text-[3.125rem] tablet:text-[2.5rem] mobile:text-[1.25rem] font-extrabold bg-black bg-opacity-50 flex flex-col laptop:flex-row items-center justify-center'>
               <div className='flex flex-col items-center laptop:flex-row laptop:justify-between laptop:space-x-28'>
                 <div className='order-2 laptop:order-1 flex flex-col my-auto text-center laptop:text-left'> 
@@ -36,7 +36,7 @@ export default async function Home() {
             </article>
           </section>
           <Link href="/random">
-            <section className='flex h-[6.25vh] text-white bg-orange-o2 justify-center items-center text-center'>
+            <section className='flex h-[6.25vh] text-white bg-orange-o2 justify-center items-center text-center fixed bottom-0 left-0 w-full'>
               <p className='font-pretendard font-extrabold text-3xl'>메뉴 고르기</p>
             </section>
           </Link>
