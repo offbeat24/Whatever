@@ -12,6 +12,7 @@
 
 html, body {
   @apply font-Pretendard tracking-[-0.025em];
+  @apply bg-white;
   min-height: 100vh;
   margin: 0;
   padding: 0;
