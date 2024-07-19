@@ -166,7 +166,7 @@ export default function FoodMap() {
           </MapMarker>
         )}
       </Map>
-      <div className="absolute space-x-10 bottom-0 right-0 z-10 flex flex-col justify-between p-1 laptop:m-[2.1875rem] 
+      <div className="absolute space-x-10 bottom-0 right-0 z-10 flex flex-col justify-center p-1 laptop:m-[2.1875rem] 
       laptop:w-[27.5rem] laptop:h-20 bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem]">
         <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
         {/* <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
