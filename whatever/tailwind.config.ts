@@ -7,9 +7,26 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      'mobile': '320px',
+      'tablet': '744px',
+      'tablet-l' : '1024px',
+      'laptop' : '1280px'
+    },
     extend: {
       fontFamily: {
-        'pretendard': ['PretendardVariable', 'sans-serif']
+        Pretendard: ['PretendardVariable', 'sans-serif']
+      },
+      colors: {
+        snow: "#FFFFFF",
+        white: "#FAFAFA",
+        gray: "#C6C6C6",
+        black: "#141414",
+        orange: {
+          o1: "#F58700",
+          o2: "#FF9700",
+          o3: "#FFAB40"
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

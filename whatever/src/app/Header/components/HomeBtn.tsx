@@ -1,10 +1,18 @@
 import Link from 'next/link';
-import Logo from '../../../../public/Logo_new_text.svg';
+import Image from 'next/image';
+
 
 export default function HomeBtn() {
   return (
-    <Link href="/" className=''>
-      <Logo width={208} height={56} className='justify-self-center'/>
+    <Link href="/" className='flex justify-center items-center laptop:w-[10.625rem] tablet-l:w-[8.5rem] tablet:w-[11rem] mobile:w-[6.5rem]'>
+      <Image
+        src='/Logo_new_text.svg'
+        alt="Logo"
+        layout="responsive"
+        width={210}
+        height={60}
+        className="object-contain w-full"
+      />
     </Link>
   );
 };

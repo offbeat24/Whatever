@@ -1,16 +1,13 @@
-import ContactBtn from './components/ContactBtn';
 import HomeBtn from './components/HomeBtn';
 
 export default function Header() {
   return (
-    <header className='relative h-[126px] bg-transparent content-center'>
-      <div className='relative z-10'>
-        <nav className='flex justify-between items-center px-9 justify-items-center'>
-          <div className='w-14'/>
+    <header className="relative bg-transparent flex items-center justify-center">
+      <nav className="flex justify-between items-center w-full laptop:p-[1.5rem] tablet-l:p-[1.25rem] tablet:p-[2rem] mobile:p-[1.25rem] z-10">
+        <div className="flex-1 flex justify-center">
           <HomeBtn />
-          <ContactBtn />
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 }

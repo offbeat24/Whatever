@@ -123,7 +123,7 @@ export default function FoodMap() {
   }, [mapLoaded, mapBoundsChanged]);
 
   return(
-    <div>
+    <div className="relative w-full h-screen">
       <Map
         id="map"
         center={{
@@ -131,8 +131,8 @@ export default function FoodMap() {
           lng: loc?.longitude!,
         }}
         style={{
-          width: "1650px",
-          height: "880px",
+          width: "100%",
+          height: "100%",
         }}
         level={3}
         onCreate={handleMapLoad}
@@ -166,10 +166,17 @@ export default function FoodMap() {
           </MapMarker>
         )}
       </Map>
-      <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
-      <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
-        현재 위치로 돌아가기
-      </button>
+      <div className="absolute space-x-10 top-0 left-1/2 transform -translate-x-1/2 z-10 flex flex-col justify-center p-1 my-[1.25rem]
+      laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-0 laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
+      tablet-l:h-17 tablet-l:w-[20rem] tablet-l:text-[1.7rem]
+      tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
+      mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]
+      bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
+        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
+        {/* <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
+          현재 위치로 돌아가기
+        </button> */}
+      </div>
     </div>
   )
 }

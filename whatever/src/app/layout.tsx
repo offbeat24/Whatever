@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 import '../../styles/globals.css';
-import Header from './Header/header';
 
 
 export const metadata: Metadata = {
@@ -15,6 +15,12 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
+const pretendard = localFont({
+  src: '../../public/Font/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '100 900', // 다양한 weight 설정
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,8 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='kr'>
-      <body >
-        <Header />
+      <body className={pretendard.className}>
         {children}
       </body>
     </html>
