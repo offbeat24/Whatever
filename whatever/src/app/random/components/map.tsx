@@ -133,6 +133,7 @@ export default function FoodMap() {
         style={{
           width: "100%",
           height: "100%",
+          zIndex: 5,
         }}
         level={3}
         onCreate={handleMapLoad}
@@ -166,7 +167,7 @@ export default function FoodMap() {
           </MapMarker>
         )}
       </Map>
-      <div className="absolute space-x-10 top-0 left-1/2 transform -translate-x-1/2 z-10 flex flex-col justify-center p-1 my-[1.25rem]
+      <div className="absolute z-20 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
       laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-0 laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
       tablet-l:h-17 tablet-l:w-[20rem] tablet-l:text-[1.7rem]
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
