@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
 import Image from 'next/image';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
@@ -26,6 +26,8 @@ export default function FoodMap() {
   const [selectedPlace, setSelectedPlace] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
+  const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
+  const mapRef = useRef<kakao.maps.Map>(null);
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -91,7 +93,10 @@ export default function FoodMap() {
       setLoc({
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
-      })
+      });
+      if (kakaoMap) {
+        kakaoMap.setCenter(new kakao.maps.LatLng(userLocation.latitude, userLocation.longitude));
+      }
     }
   };
 
@@ -115,6 +120,20 @@ export default function FoodMap() {
     setMapBoundsChanged(true); // 지도 경계 변경 상태 설정
   };
 
+  const zoomIn = () => {
+    const map = mapRef.current;
+    if (map) {
+      map.setLevel(map.getLevel() - 1);
+    }
+  };
+
+  const zoomOut = () => {
+    const map = mapRef.current;
+    if (map) {
+      map.setLevel(map.getLevel() + 1);
+    }
+  };
+
   useEffect(() => {
     if (mapLoaded && bound) {
       fetchPlaces();
@@ -123,7 +142,7 @@ export default function FoodMap() {
   }, [mapLoaded, mapBoundsChanged]);
 
   return(
-    <div className="relative w-full h-screen">
+    <section className="relative w-full h-screen">
       <Map
         id="map"
         center={{
@@ -136,8 +155,12 @@ export default function FoodMap() {
           zIndex: 5,
         }}
         level={3}
-        onCreate={handleMapLoad}
+        onCreate={(map) => {
+          setkakaoMap(map);
+          handleMapLoad(map);
+        }}
         onBoundsChanged={handleBoundsChange}
+        ref={mapRef}
       >
         {selectedPlace && (
           <MapMarker
@@ -167,17 +190,60 @@ export default function FoodMap() {
           </MapMarker>
         )}
       </Map>
-      <div className="absolute z-20 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
+      <div className="absolute z-10 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
       laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-0 laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
       tablet-l:h-17 tablet-l:w-[20rem] tablet-l:text-[1.7rem]
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
       mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]
       bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
         <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
-        {/* <button type="button" onClick={handleResetLocation} style={{ position: 'absolute', top: '10px', right: '10px', padding: '10px', background: '#FFA114', color: '#fff', border: 'none', borderRadius: '5px' }}>
-          현재 위치로 돌아가기
-        </button> */}
       </div>
-    </div>
+      <div className="absolute flex flex-col z-20 top-28 right-6 space-y-8">
+        <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
+          <button
+            type='button'
+            className="p-1 w-11 h-11 bg-white rounded-[5px_5px_0px_0px] border-b-[rgba(0,0,0,0.10)] border-b border-solid"
+            onClick={zoomIn}
+            aria-label="Zoom in"
+          >
+            <Image
+              src="/PlusIcon.svg"
+              alt="ZommIn"
+              width={35}
+              height={35}
+              className="object-contain"
+            />
+          </button>
+          <button
+            type='button'
+            className="p-1 w-11 h-11 bg-white rounded-[0px_0px_5px_5px] border-t-[rgba(0,0,0,0.10)] border-t border-solid"
+            onClick={zoomOut}
+            aria-label="Zoom out"
+          >
+            <Image
+              src="/MinusIcon.svg"
+              alt="ZommOut"
+              width={35}
+              height={35}
+              className="object-contain"
+            />
+          </button>
+        </div>
+        <button
+          type='button'
+          className="p-2 w-11 h-11 bg-white rounded-[5px] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]"
+          onClick={handleResetLocation}
+          aria-label="Move to current location"
+        >
+          <Image
+            src="/LocationIcon.svg"
+            alt="Current location"
+            width={30}
+            height={30}
+            className="object-contain"
+          />
+        </button>
+      </div>
+    </section>
   )
 }
