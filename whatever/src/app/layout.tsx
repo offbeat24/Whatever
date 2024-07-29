@@ -1,5 +1,3 @@
-import React from 'react';
-import { RecoilRoot } from 'recoil';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import '../../styles/globals.css';
@@ -31,9 +29,7 @@ export default function RootLayout({
   return (
     <html lang='kr'>
       <body className={pretendard.className}>
-        <RecoilRoot>
-          {children}
-        </RecoilRoot>
+        {children}
       </body>
     </html>
   );
