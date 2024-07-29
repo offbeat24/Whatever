@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import '../../styles/globals.css';
-import { Provider } from 'react-redux';
-import store from '../redux/store';
 
 export const metadata: Metadata = {
   title: '아무거나',
@@ -29,10 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='kr'>
-      <body className={pretendard.className}>
-      <Provider store={store}>
+      <body className={pretendard.className}>  
         {children}
-      </Provider>
       </body>
     </html>
   );

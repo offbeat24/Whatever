@@ -1,8 +1,8 @@
-'use client'
-
 import { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
 import Image from 'next/image';
+import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
 
@@ -28,6 +28,7 @@ export default function FoodMap() {
   const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
   const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
+  const center = useSelector((state: RootState) => state.map.center);
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -140,6 +141,12 @@ export default function FoodMap() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapLoaded, mapBoundsChanged]);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setCenter(new kakao.maps.LatLng(center.latitude, center.longitude));
+    }
+  }, [center]);
 
   return(
     <section className="relative w-full h-screen">

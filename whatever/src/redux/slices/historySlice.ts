@@ -1,30 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Place {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
-
 interface HistoryState {
-  history: Place[];
+  places: any[];
 }
 
 const initialState: HistoryState = {
-  history: [],
+  places: [],
 };
 
 const historySlice = createSlice({
   name: 'history',
   initialState,
   reducers: {
-    addToHistory(state, action: PayloadAction<Place>) {
-      state.history.push(action.payload);
+    addHistory(state, action: PayloadAction<any>) {
+      state.places.push(action.payload);
     },
   },
 });
 
-export const { addToHistory } = historySlice.actions;
+export const { addHistory } = historySlice.actions;
 export default historySlice.reducer;

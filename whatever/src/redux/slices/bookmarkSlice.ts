@@ -1,30 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Place {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
-
 interface BookmarkState {
-  bookmarks: Place[];
+  places: any[];
 }
 
 const initialState: BookmarkState = {
-  bookmarks: [],
+  places: [],
 };
 
 const bookmarkSlice = createSlice({
   name: 'bookmark',
   initialState,
   reducers: {
-    addBookmark(state, action: PayloadAction<Place>) {
-      state.bookmarks.push(action.payload);
+    addBookmark(state, action: PayloadAction<any>) {
+      state.places.push(action.payload);
     },
     removeBookmark(state, action: PayloadAction<string>) {
-      state.bookmarks = state.bookmarks.filter(place => place.id !== action.payload);
+      state.places = state.places.filter(place => place.id !== action.payload);
     },
   },
 });

@@ -1,8 +1,10 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import ShuffleIcon from '../../../public/Shuffle.svg'; 
+import { addHistory } from '../../redux/slices/historySlice';
 
 interface Props {
   textData : string[],
@@ -23,7 +25,8 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
   const maxIndexCount = 24;
-  
+  const dispatch = useDispatch();
+  const executedRef = useRef(false);
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
 
@@ -56,6 +59,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
       setRandomIndices(newIndices);
       setCurrentIndex(0);
+      executedRef.current = false;
     }
   }, [data.length, initialTextDisplayed]); 
 
@@ -66,9 +70,11 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       intervalId = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % itemsToShow.length);
       }, getDuration(10, currentIndex));
-    } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0) {
+    } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0 && !executedRef.current) {
       const selectedPlace = dataFromMap[randomIndices[currentIndex]];
       onPlaceSelected(selectedPlace);
+      dispatch(addHistory(selectedPlace)); 
+      executedRef.current = true;
     }
   
     // 컴포넌트 언마운트 시 또는 의존성 배열의 값이 변경될 때 인터벌 정리
@@ -91,6 +97,7 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       setRandomIndices(newIndices);
       setCurrentIndex(0);
       setInitialTextDisplayed(false);
+      executedRef.current = false;
     } else {
       console.warn("No data available to shuffle.");
     }
