@@ -1,16 +1,15 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import ShuffleIcon from '../../../public/Shuffle.svg'; 
-import { addHistory } from '../../redux/slices/historySlice';
 
 interface Props {
   textData : string[],
-  dataFromMap : any[],
-  onShuffle : () => Promise<void>,
-  onPlaceSelected: (place: any) => void,
+  dataFromMap : any[] | undefined,
+  onShuffle? : () => Promise<void>,
+  onPlaceSelected?: (place: any) => void,
+  onAddHistory?: (place: any) => void,
 }
 
 interface VariantProps {
@@ -20,12 +19,11 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSelected }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceSelected, onAddHistory }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
   const maxIndexCount = 24;
-  const dispatch = useDispatch();
   const executedRef = useRef(false);
 
   const getDuration = (base: number, index: number): number => base * (index + 1) * 0.5;
@@ -72,8 +70,12 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
       }, getDuration(10, currentIndex));
     } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0 && !executedRef.current) {
       const selectedPlace = dataFromMap[randomIndices[currentIndex]];
-      onPlaceSelected(selectedPlace);
-      dispatch(addHistory(selectedPlace)); 
+      if (onPlaceSelected) {
+        onPlaceSelected(selectedPlace);
+      }
+      if (onAddHistory) {
+        onAddHistory(selectedPlace);
+      }
       executedRef.current = true;
     }
   
@@ -137,8 +139,8 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
                   variants={variants}
                   initial="initial"
                   animate="animate"
-                  exit="exit"
-                  transition={{ duration: getDuration(isLast ? 0.1 : 0.01, i), ease: isLast ? 'easeInOut' : 'linear' }}
+                  exit={ isLast ? '' : 'exit' }
+                  transition={{ duration: getDuration(isLast ? 0.07 : 0.01, i), ease: isLast ? 'easeInOut' : 'linear' }}
                 >
                   {item}
                 </motion.p>
@@ -154,3 +156,9 @@ export default function Roulette({ textData, dataFromMap, onShuffle, onPlaceSele
     
   );
 }
+
+Roulette.defaultProps = {
+  onAddHistory: () => {},
+  onShuffle: async () => {},
+  onPlaceSelected: () => {},
+};

@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
 import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
+import { addHistory } from '../../../redux/slices/historySlice';
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
@@ -29,6 +30,7 @@ export default function FoodMap() {
   const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
+  const dispatch = useDispatch();
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -148,6 +150,10 @@ export default function FoodMap() {
     }
   }, [center]);
 
+  const handleAddHistory = (place: any) => {
+    dispatch(addHistory(place));
+  };
+
   return(
     <section className="relative w-full h-screen">
       <Map
@@ -203,7 +209,7 @@ export default function FoodMap() {
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
       mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]
       bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
-        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} />
+        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} onAddHistory={handleAddHistory}/>
       </div>
       <div className="absolute flex flex-col z-20 top-28 right-6 space-y-8">
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
