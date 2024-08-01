@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import searchReducer from './slices/searchSlice';
 import bookmarkReducer from './slices/bookmarkSlice';
 import historyReducer from './slices/historySlice';
@@ -12,6 +12,23 @@ const rootReducer = combineReducers({
   history: historyReducer,
   map: mapReducer,
 });
+
+
+const createNoopStorage = () => ({
+    getItem(_key: string) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: string) {
+      return Promise.resolve();
+    },
+  });
+
+const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
+
+export default storage;
 
 const persistConfig = {
   key: 'root',

@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import SearchContent from './menu/searchContent';
-import BookmarkContent from './menu/bookmarkContent';
-import HistoryContent from './menu/historyContent';
+import ListContent from './ListContent';
 
 export default function Navigation() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -49,9 +47,7 @@ export default function Navigation() {
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 className="fixed top-0 left-[4.5rem] w-96 h-full bg-white hidden laptop:block pointer-events-auto shadow-[15px_0px_25px_0px_rgba(0,0,0,0.15)]"
               >
-                {activeMenu === 'search' && <SearchContent />}
-                {activeMenu === 'bookmark' && <BookmarkContent />}
-                {activeMenu === 'history' && <HistoryContent />}  
+                {activeMenu && <ListContent type={activeMenu} />} 
               </motion.div>
 
               {/* 하단 네비게이션 (모바일 및 태블릿) */}
@@ -66,9 +62,7 @@ export default function Navigation() {
                 <button type="button" onClick={() => setActiveMenu(null)} className="absolute top-4 right-4">
                   Close
                 </button>
-                {activeMenu === 'search' && <SearchContent />}
-                {activeMenu === 'bookmark' && <BookmarkContent />}
-                {activeMenu === 'history' && <HistoryContent />}  
+                {activeMenu && <ListContent type={activeMenu} />} 
               </motion.div>
             </>
           )}

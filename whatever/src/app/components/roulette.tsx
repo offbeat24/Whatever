@@ -150,7 +150,7 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
         </AnimatePresence>
       </div>
       <motion.button className="ml-auto" onClick={handleClick} whileTap={{ rotate: 720 }} whileHover={{ rotate: 90 }} style={{ originX: 0.5, originY: 0.5 }}>
-        <ShuffleIcon style={{ fill: "#646464" }} classname=''/>
+        <ShuffleIcon style={{ fill: "#646464" }} className=''/>
       </motion.button>
     </div>
     
