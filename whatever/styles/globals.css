@@ -16,4 +16,9 @@ html, body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

@@ -15,8 +15,11 @@ const historySlice = createSlice({
     addHistory(state, action: PayloadAction<any>) {
       state.places.push(action.payload);
     },
+    removeHistory(state, action: PayloadAction<string>) {
+      state.places = state.places.filter(place => place.id !== action.payload);
+    },
   },
 });
 
-export const { addHistory } = historySlice.actions;
+export const { addHistory, removeHistory } = historySlice.actions;
 export default historySlice.reducer;

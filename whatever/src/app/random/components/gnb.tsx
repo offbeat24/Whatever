@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +8,6 @@ import HistoryContent from './menu/historyContent';
 
 export default function Navigation() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const dispatch = useDispatch();
 
   const handleMenuClick = (menu: string | null) => {
     setActiveMenu(menu === activeMenu ? null : menu);
@@ -31,7 +29,7 @@ export default function Navigation() {
   return (
     <div className="relative">
       {/* 메뉴 컨테이너 */}
-      <div className="fixed inset-0 z-20 pointer-events-none">
+      <div className="fixed inset-0 z-20 pointer-events-none scrollbar-hide">
         <AnimatePresence>
           {activeMenu && (
             <>
@@ -51,11 +49,6 @@ export default function Navigation() {
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 className="fixed top-0 left-[4.5rem] w-96 h-full bg-white hidden laptop:block pointer-events-auto shadow-[15px_0px_25px_0px_rgba(0,0,0,0.15)]"
               >
-                <button
-                  type="button"
-                  onClick={()=> setActiveMenu(null)} className="absolute top-4 right-4">
-                    Close
-                </button>
                 {activeMenu === 'search' && <SearchContent />}
                 {activeMenu === 'bookmark' && <BookmarkContent />}
                 {activeMenu === 'history' && <HistoryContent />}  
@@ -84,7 +77,7 @@ export default function Navigation() {
 
       {/* 네비게이션 */}
       <nav className={`fixed laptop:top-0 laptop:left-0 laptop:h-full laptop:w-[4.6875rem] ${!activeMenu ? 'laptop:shadow-[15px_0px_25px_0px_rgba(0,0,0,0.15)]' : ''} laptop:flex-col laptop:justify-start
-      h-[3.125rem] ${!activeMenu ? 'tablet:shadow-[0px_-15px_14px_0px_rgba(0,0,0,0.15)]' : ''}
+      h-[3.125rem] scrollbar-hide ${!activeMenu ? 'tablet:shadow-[0px_-15px_14px_0px_rgba(0,0,0,0.15)]' : ''}
       flex-row bottom-0 left-0 w-full bg-orange-o3 z-30 flex justify-between items-center`}>
         <Link href="/" className='hidden laptop:block'>
         <div className='flex laptop:w-[4.6975rem] laptop:h-[5.9375rem] border-b-white border-b border-solid justify-center items-center'>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
-import { addHistory } from '../../../redux/slices/historySlice';
+import { addHistory, removeHistory } from '../../../redux/slices/historySlice'; 
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
@@ -30,6 +30,7 @@ export default function FoodMap() {
   const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
+  const historyPlaces = useSelector((state: RootState) => state.history.places);
   const dispatch = useDispatch();
   useKakaoLoader();
 
@@ -151,7 +152,11 @@ export default function FoodMap() {
   }, [center]);
 
   const handleAddHistory = (place: any) => {
-    dispatch(addHistory(place));
+    const placeExists = historyPlaces.some(historyPlace => historyPlace.id === place.id);
+    if (placeExists) {
+      dispatch(removeHistory(place.id)); // 기존에 존재하는 장소를 삭제
+    }
+    dispatch(addHistory(place)); // 새로 저장
   };
 
   return(
