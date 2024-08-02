@@ -17,16 +17,28 @@ interface Place {
 
 interface ContentProps {
   type: string;
+  closeMenu: () => void;
+  isMenuOpen: boolean;
 }
 
-export default function ListContent({ type }: ContentProps) {
+export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProps) {
   const dispatch = useDispatch();
-  const { keyword, places: searchPlaces } = useSelector((state: RootState) => state.search);
+  const { places: searchPlaces } = useSelector((state: RootState) => state.search);
   const { places: historyPlaces } = useSelector((state: RootState) => state.history);
   const { places: bookmarkedPlaces } = useSelector((state: RootState) => state.bookmark);
   
-  const [keywordState, setKeywordState] = useState(keyword);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [historyKeyword, setHistoryKeyword] = useState('');
+  const [bookmarkKeyword, setBookmarkKeyword] = useState('');
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      setHistoryKeyword('');
+      setBookmarkKeyword('');
+      setFilteredPlaces([]);
+    }
+  }, [isMenuOpen]);
 
   useEffect(() => {
     switch (type) {
@@ -43,6 +55,17 @@ export default function ListContent({ type }: ContentProps) {
         break;
     }
   }, [searchPlaces, historyPlaces, bookmarkedPlaces, type]);
+
+  useEffect(() => {
+    if (type !== 'search') {
+      const places = type === 'history' ? historyPlaces : bookmarkedPlaces;
+      const currentKeyword = type === 'history' ? historyKeyword : bookmarkKeyword;
+      const filtered = places.filter(place =>
+        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)
+      );
+      setFilteredPlaces(filtered.length > 0 ? filtered : []);
+    }
+  }, [historyKeyword, bookmarkKeyword, type, historyPlaces, bookmarkedPlaces]);
 
   const performSearch = (key: string) => {
     if (!window.kakao || !window.kakao.maps) {
@@ -70,30 +93,60 @@ export default function ListContent({ type }: ContentProps) {
       }
     });
   };
+  
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (type === 'search') {
-      performSearch(keywordState);
+      performSearch(searchKeyword);
     } else {
       const places = type === 'history' ? historyPlaces : bookmarkedPlaces;
+      const currentKeyword = type === 'history' ? historyKeyword : bookmarkKeyword;
       const filtered = places.filter(place =>
-        place.place_name.includes(keywordState) || place.address_name.includes(keywordState)
+        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)
       );
       setFilteredPlaces(filtered.length > 0 ? filtered : []);
     }
   };
 
-  
-
   const clearKeyword = () => {
-    setKeywordState('');
-    if (type !== 'search') {
-      setFilteredPlaces(type === 'history' ? historyPlaces : bookmarkedPlaces);
+    switch (type) {
+      case 'search':
+        setSearchKeyword('');
+        performSearch('');
+        break;
+      case 'history':
+        setHistoryKeyword('');
+        setFilteredPlaces([...historyPlaces].reverse());
+        break;
+      case 'bookmark':
+        setBookmarkKeyword('');
+        setFilteredPlaces([...bookmarkedPlaces].reverse());
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = e.target;
+    switch (type) {
+      case 'search':
+        setSearchKeyword(value);
+        break;
+      case 'history':
+        setHistoryKeyword(value);
+        break;
+      case 'bookmark':
+        setBookmarkKeyword(value);
+        break;
+      default :
+        break;
     }
   };
 
   const handlePlaceClick = (place: Place) => {
     dispatch(setCenter({ latitude: place.y, longitude: place.x }));
+    closeMenu();
   };
 
   const isBookmarked = (placeId: string) => bookmarkedPlaces.some(bookmarkedPlace => bookmarkedPlace.id === placeId);
@@ -114,8 +167,21 @@ export default function ListContent({ type }: ContentProps) {
     }
   };
 
+  const getInputValue = () => {
+    switch (type) {
+      case 'search':
+        return searchKeyword;
+      case 'history':
+        return historyKeyword;
+      case 'bookmark':
+        return bookmarkKeyword;
+      default:
+        return '';
+    }
+  };
+
   return (
-    <div className='laptop:p-5 h-[100%] flex flex-col'>
+    <div className='relative p-5 pt-[1.875rem] h-full flex flex-col'>
       <div className='sticky top-0 shadow-md bg-white z-10'>
         <form onSubmit={handleSearch} className="relative">
           <button 
@@ -131,9 +197,9 @@ export default function ListContent({ type }: ContentProps) {
           </button>
           <input
             type='text'
-            className="laptop:w-[21.875rem] laptop:h-10 laptop:px-9 border-orange-o3 border-2 rounded-lg bg-snow [filter:drop-shadow(0rgba(0,0,0,0.07))]"
-            value={keywordState}
-            onChange={(e) => setKeywordState(e.target.value)}
+            className="laptop:w-[21.875rem] laptop:h-10 laptop:px-9 tablet-l:w-full border-orange-o3 border-2 rounded-lg bg-snow [filter:drop-shadow(0rgba(0,0,0,0.07))]"
+            value={getInputValue()}
+            onChange={handleKeywordChange}
             placeholder='검색어를 입력하세요'
           />
           <button 
@@ -150,13 +216,13 @@ export default function ListContent({ type }: ContentProps) {
           </button>
         </form>
       </div>
-      <div className='flex-grow overflow-y-auto laptop:pt-5'>
+      <div className='overflow-y-auto laptop:pt-5 tablet-l:pt-5 grid gap-2 laptop:grid-cols-1 tablet:grid-cols-2'>
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
             <button
               type='button'
               key={place.id}
-              className='relative laptop:w-[21.5625rem] laptop:h-[8.125rem] bg-snow rounded-lg shadow laptop:px-5 laptop:space-y-3 laptop:mb-2 text-start'
+              className='relative laptop:w-full laptop:h-[8.125rem] bg-snow rounded-lg shadow px-5 laptop:space-y-3 laptop:mb-2 text-start'
               onClick={() => handlePlaceClick(place)}>
               <p className='text-orange-o1 text-xl font-bold'>{place.place_name}</p>
               <p className='text-lg font-medium'>{place.address_name}</p>

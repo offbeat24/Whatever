@@ -216,7 +216,7 @@ export default function FoodMap() {
       bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
         <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} onAddHistory={handleAddHistory}/>
       </div>
-      <div className="absolute flex flex-col z-20 top-28 right-6 space-y-8">
+      <div className="absolute flex flex-col z-10 top-28 right-6 space-y-8">
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
           <button
             type='button'
