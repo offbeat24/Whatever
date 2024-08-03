@@ -79,7 +79,7 @@ export default function Navigation() {
                   initial="initial"
                   animate={isExpanded ? 'expanded' : 'initial'}
                   onClick={toggleExpand}
-                  className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30"
+                  className="absolute top-3 left-1/2 transform -translate-x-1/2 z-30 w-4"
                 >
                   <Image
                     src="/OpenIcon.svg"

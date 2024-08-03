@@ -197,7 +197,11 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
           </button>
           <input
             type='text'
-            className="laptop:w-[21.875rem] laptop:h-10 laptop:px-9 tablet-l:w-full border-orange-o3 border-2 rounded-lg bg-snow [filter:drop-shadow(0rgba(0,0,0,0.07))]"
+            className="laptop:w-[21.875rem] laptop:h-10 laptop:px-9 
+                      w-full tablet-l:h-12 tablet-l:px-12 
+                      tablet:h-10 tablet:px-10 
+                      mobile:h-10 mobile:px-11
+                      border-orange-o3 border-2 rounded-lg bg-snow [filter:drop-shadow(0rgba(0,0,0,0.07))]"
             value={getInputValue()}
             onChange={handleKeywordChange}
             placeholder='검색어를 입력하세요'
@@ -216,23 +220,27 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
           </button>
         </form>
       </div>
-      <div className='overflow-y-auto laptop:pt-5 tablet-l:pt-5 grid gap-2 laptop:grid-cols-1 tablet:grid-cols-2'>
+      <div className='overflow-y-auto laptop:pt-5 tablet-l:pt-10 tablet:pt-9 mobile:pt-[1.125rem] grid laptop:gap-2 tablet-l:gap-5 tablet:gap-[0.875rem] mobile:gap-2 laptop:grid-cols-1 tablet:grid-cols-2'>
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
             <button
               type='button'
               key={place.id}
-              className='relative laptop:w-full laptop:h-[8.125rem] bg-snow rounded-lg shadow px-5 laptop:space-y-3 laptop:mb-2 text-start'
+              className='relative w-full laptop:h-[8.125rem] 
+                                  tablet-l:h-28 
+                                  tablet:h-20 
+                                  mobile:h-20
+                                bg-snow rounded-lg shadow px-5 laptop:mb-2 text-start'
               onClick={() => handlePlaceClick(place)}>
-              <p className='text-orange-o1 text-xl font-bold'>{place.place_name}</p>
-              <p className='text-lg font-medium'>{place.address_name}</p>
+              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold'>{place.place_name}</p>
+              <p className='laptop:text-lg tablet-l:text-base tablet:text-sm font-medium'>{place.address_name}</p>
               <a href={`https://place.map.kakao.com/${place.id}`} target="_blank" rel="noopener noreferrer">
                 <Image
                   src='/kakaomap_horizontal_en 1.png'
                   alt='kakaomap'
                   width={77.31}
                   height={20}
-                  className=''
+                  className='objext-contain tablet:w-16 mobile:w-14'
                 />
               </a>
               {type !== 'search' && (
