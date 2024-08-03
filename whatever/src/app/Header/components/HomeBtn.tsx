@@ -8,7 +8,6 @@ export default function HomeBtn() {
       <Image
         src='/Logo_new_text.svg'
         alt="Logo"
-        layout="responsive"
         width={210}
         height={60}
         className="object-contain w-full"
