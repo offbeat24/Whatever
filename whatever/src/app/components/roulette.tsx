@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import ShuffleIcon from '../../../public/Shuffle.svg'; 
+import Image from 'next/image';
 
 interface Props {
   textData : string[],
@@ -117,9 +117,23 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
     exit: { scaleY: 0.3, y: '50%', opacity: 0 },
   };
 
+  const isTextData = textData.length > 0;
+  const iconColor = isTextData ? "grey" : "white";
+  const iconSizes = isTextData ? {
+    mobile: 'w-5',  // 20px
+    tablet: 'w-12',  // 48px
+    tabletl: 'w-12',  // 48px
+    laptop: 'w-[3.75rem]', // 60px
+  } :
+  {
+    mobile: 'w-[1.625rem]',  // 20px
+    tablet: 'w-9',       // 36px
+    tabletl: 'w-12',  // 48px
+    laptop: 'w-8', // 32px
+  };
 
   return(
-    <div className='flex justify-between items-center font-extrabold px-9'>
+    <div className='relative flex items-center font-extrabold px-4 justify-center'>
       <div className='flex-grow text-center'>
         <AnimatePresence mode="popLayout" >
           {initialTextDisplayed ? (
@@ -149,8 +163,20 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
       }))}
         </AnimatePresence>
       </div>
-      <motion.button className="ml-auto" onClick={handleClick} whileTap={{ rotate: 720 }} whileHover={{ rotate: 90 }} style={{ originX: 0.5, originY: 0.5 }}>
-        <ShuffleIcon style={{ fill: "#646464" }} className=''/>
+      <motion.button 
+        className="absolute right-4" 
+        onClick={handleClick} 
+        whileTap={{ rotate: 720 }} 
+        whileHover={{ rotate: 90 }} 
+        style={{ originX: 0.5, originY: 0.5 }}>
+        <Image
+          src={`/Shuffle_${iconColor}.svg`} // 색상에 따라 다른 아이콘 경로
+          alt="Shuffle"
+          width={0} // 기본 값으로 0을 설정
+          height={0} // 기본 값으로 0을 설정
+          style={{ width: '100%', height: '100%' }}
+          className={`mobile:${iconSizes.mobile} tablet:${iconSizes.tablet} tablet-l:${iconSizes.tabletl} laptop:${iconSizes.laptop}`}
+        />
       </motion.button>
     </div>
     
