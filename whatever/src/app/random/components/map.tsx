@@ -5,16 +5,14 @@ import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
-import { addHistory, removeHistory } from '../../../redux/slices/historySlice'; 
+import { addHistory, removeHistory } from '../../../redux/slices/historySlice';
+import { setCenter } from '../../../redux/slices/mapSlice'; 
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
-  } | null>({
-    latitude: 33.450701,
-    longitude: 126.570667
-  });
+  } | null>(null);
   const [bound, setBound] = useState<{
     sw: kakao.maps.LatLng,
     ne: kakao.maps.LatLng
@@ -28,6 +26,7 @@ export default function FoodMap() {
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
   const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
+  const [showMyLocationPin, setShowMyLocationPin] = useState(false);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
   const historyPlaces = useSelector((state: RootState) => state.history.places);
@@ -41,14 +40,8 @@ export default function FoodMap() {
     setLoc({ latitude: lat, longitude: lon });
   }
   const reject = () => {
-    setUserLocation({
-      latitude: 33.450701,
-      longitude: 126.570667
-    })
-    setLoc({
-      latitude: 33.450701,
-      longitude: 126.570667
-    });
+    setUserLocation(null);
+    setLoc(null);
   }
 
   const fetchPlaces = async () => {
@@ -94,13 +87,8 @@ export default function FoodMap() {
 
   const handleResetLocation = () => {
     if (userLocation) {
-      setLoc({
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-      });
-      if (kakaoMap) {
-        kakaoMap.setCenter(new kakao.maps.LatLng(userLocation.latitude, userLocation.longitude));
-      }
+      dispatch(setCenter({ latitude: userLocation.latitude, longitude: userLocation.longitude }));
+      setShowMyLocationPin(!showMyLocationPin);
     }
   };
 
@@ -206,6 +194,25 @@ export default function FoodMap() {
               </div>
             </MapInfoWindow>
           </MapMarker>
+        )}
+        {showMyLocationPin && userLocation && (
+          <MapMarker
+            position={{ lat: userLocation.latitude, lng: userLocation.longitude }}
+            title="My Location"
+            image={{
+              src: '/MyLocationPin.svg',
+              size: {
+                width: 68,
+                height: 85,
+              },
+              options: {
+                offset: {
+                  x: 16,
+                  y: 16,
+                }
+              }
+            }}
+          />
         )}
       </Map>
       <div className="absolute z-10 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
