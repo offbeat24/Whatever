@@ -8,7 +8,7 @@ interface Props {
   textData : string[],
   dataFromMap : any[] | undefined,
   onShuffle? : () => Promise<void>,
-  onPlaceSelected?: (place: any) => void,
+  onPlaceRandom?: (place: any) => void,
   onAddHistory?: (place: any) => void,
 }
 
@@ -19,7 +19,7 @@ interface VariantProps {
   filter?: string;
 }
 
-export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceSelected, onAddHistory }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceRandom, onAddHistory }: Props): JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
@@ -69,12 +69,12 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
         setCurrentIndex((prev) => (prev + 1) % itemsToShow.length);
       }, getDuration(10, currentIndex));
     } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0 && !executedRef.current) {
-      const selectedPlace = dataFromMap[randomIndices[currentIndex]];
-      if (onPlaceSelected) {
-        onPlaceSelected(selectedPlace);
+      const randomPlace = dataFromMap[randomIndices[currentIndex]];
+      if (onPlaceRandom) {
+        onPlaceRandom(randomPlace);
       }
       if (onAddHistory) {
-        onAddHistory(selectedPlace);
+        onAddHistory(randomPlace);
       }
       executedRef.current = true;
     }
@@ -186,5 +186,5 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
 Roulette.defaultProps = {
   onAddHistory: () => {},
   onShuffle: async () => {},
-  onPlaceSelected: () => {},
+  onPlaceRandom: () => {},
 };

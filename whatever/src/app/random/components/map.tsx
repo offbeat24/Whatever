@@ -22,14 +22,15 @@ export default function FoodMap() {
     longitude: number
   } | null>(null);
   const [places, setPlaces] = useState<any[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [randomPlace, setRandomPlace] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
-  const [kakaoMap, setkakaoMap] = useState<kakao.maps.Map | null>(null);
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
   const historyPlaces = useSelector((state: RootState) => state.history.places);
+  const selectedPlace = useSelector((state: RootState) => state.selectedPlace.place);
+  const selectedType = useSelector((state: RootState) => state.selectedPlace.type);
   const dispatch = useDispatch();
   useKakaoLoader();
 
@@ -80,8 +81,9 @@ export default function FoodMap() {
     navigator.geolocation.getCurrentPosition(approve, reject);
   }, []);
 
-  const handlePlaceSelected = (place: any) => {
-    setSelectedPlace(place);
+  const handlePlaceRandom = (place: any) => {
+    console.log("랜덤추출완료")
+    setRandomPlace(place);
     setPlaces([place]); // 선택된 장소만 places로 설정
   };
 
@@ -93,6 +95,7 @@ export default function FoodMap() {
   };
 
   const handleMapLoad = (map: kakao.maps.Map) => {
+    console.log("지도로드완료")
     if (!mapLoaded) {
       const bounds = map.getBounds();
       setBound({
@@ -104,6 +107,7 @@ export default function FoodMap() {
   };
 
   const handleBoundsChange = (map: kakao.maps.Map) => {
+    console.log("지도이동완료")
     const bounds = map.getBounds();
     setBound({
       sw: bounds.getSouthWest(),
@@ -140,6 +144,7 @@ export default function FoodMap() {
   }, [center]);
 
   const handleAddHistory = (place: any) => {
+    console.log("기록완료")
     const placeExists = historyPlaces.some(historyPlace => historyPlace.id === place.id);
     if (placeExists) {
       dispatch(removeHistory(place.id)); // 기존에 존재하는 장소를 삭제
@@ -147,6 +152,20 @@ export default function FoodMap() {
     dispatch(addHistory(place)); // 새로 저장
   };
 
+  const getMarkerImage = (type: string | null, place: any) => {
+    console.log(type,place);
+    if (type === 'search' && place.category_group_code === 'FD6') {
+      return '/logo-pin-2.svg';
+    } if (type === 'bookmark') {
+      return '/BookmarkPin.svg';
+    } if (type === 'history') {
+      return '/HistoryPin.svg';
+    } 
+    return '/LocationPin.svg';
+    
+  };
+
+  
   return(
     <section className="relative w-full h-screen">
       <Map
@@ -162,17 +181,16 @@ export default function FoodMap() {
         }}
         level={3}
         onCreate={(map) => {
-          setkakaoMap(map);
           handleMapLoad(map);
         }}
         onBoundsChanged={handleBoundsChange}
         ref={mapRef}
       >
-        {selectedPlace && (
+        {randomPlace && (
           <MapMarker
-            key={selectedPlace.id}
-            position={{ lat: selectedPlace.y, lng: selectedPlace.x }}
-            title={selectedPlace.place_name}
+            key={randomPlace.id}
+            position={{ lat: randomPlace.y, lng: randomPlace.x }}
+            title={randomPlace.place_name}
             image={{
               src: '/logo-pin-1.svg',
               size: {
@@ -187,12 +205,39 @@ export default function FoodMap() {
               }
             }}
           >
-            <MapInfoWindow position={{ lat: selectedPlace.y, lng: selectedPlace.x }}>
+            {/* <MapInfoWindow position={{ lat: randomPlace.y, lng: randomPlace.x }}>
+              <div style={{ padding: '5px', color: '#000' }}>
+                <h4>{randomPlace.place_name}</h4>
+                <p>{randomPlace.address_name}</p>
+              </div>
+            </MapInfoWindow> */}
+          </MapMarker>
+        )}
+        {selectedPlace && (
+          <MapMarker
+            key={selectedPlace.id}
+            position={{ lat: selectedPlace.y, lng: selectedPlace.x }}
+            title={selectedPlace.place_name}
+            image={{
+              src: getMarkerImage(selectedType, selectedPlace),
+              size: {
+                width: 68,
+                height: 85,
+              }, // 마커이미지의 크기입니다
+              options: {
+                offset: {
+                  x: 27,
+                  y: 69,
+                }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              }
+            }}
+          >
+            {/* <MapInfoWindow position={{ lat: selectedPlace.y, lng: selectedPlace.x }}>
               <div style={{ padding: '5px', color: '#000' }}>
                 <h4>{selectedPlace.place_name}</h4>
                 <p>{selectedPlace.address_name}</p>
               </div>
-            </MapInfoWindow>
+            </MapInfoWindow> */}
           </MapMarker>
         )}
         {showMyLocationPin && userLocation && (
@@ -221,7 +266,7 @@ export default function FoodMap() {
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
       mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]
       bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
-        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceSelected={handlePlaceSelected} onAddHistory={handleAddHistory}/>
+        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceRandom={handlePlaceRandom} onAddHistory={handleAddHistory}/>
       </div>
       <div className="absolute flex flex-col z-10 top-28 right-6 space-y-8">
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
@@ -272,3 +317,9 @@ export default function FoodMap() {
     </section>
   )
 }
+
+
+/*  변경될때마다 리스트새로 받아오지 말고 버튼 누르면 새로 받아와라 
+    히스토리 마커 그림자
+    음식점일 떄 마커 변경
+    랜덤장소 결과 말고 다른 마커는 언제 지워져야 하지? */

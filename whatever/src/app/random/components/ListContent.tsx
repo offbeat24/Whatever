@@ -38,9 +38,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
       setHistoryKeyword('');
       setBookmarkKeyword('');
       setFilteredPlaces([]);
-      dispatch(clearSelectedPlace());
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMenuOpen]);
 
   useEffect(() => {
@@ -49,10 +47,10 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
         setFilteredPlaces(searchPlaces);
         break;
       case 'history':
-        setFilteredPlaces([...historyPlaces].reverse());
+        setFilteredPlaces(historyPlaces);
         break;
       case 'bookmark':
-        setFilteredPlaces([...bookmarkedPlaces].reverse());
+        setFilteredPlaces(bookmarkedPlaces);
         break;
       default:
         break;
@@ -64,8 +62,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
       const places = type === 'history' ? historyPlaces : bookmarkedPlaces;
       const currentKeyword = type === 'history' ? historyKeyword : bookmarkKeyword;
       const filtered = places.filter(place =>
-        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)
-      );
+        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)).reverse();
       setFilteredPlaces(filtered.length > 0 ? filtered : []);
     }
   }, [historyKeyword, bookmarkKeyword, type, historyPlaces, bookmarkedPlaces]);
@@ -148,6 +145,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
   };
 
   const handlePlaceClick = (place: Place) => {
+    dispatch(clearSelectedPlace());
     dispatch(setCenter({ latitude: place.y, longitude: place.x }));
     dispatch(setSelectedPlace({place, type}));
     closeMenu();
