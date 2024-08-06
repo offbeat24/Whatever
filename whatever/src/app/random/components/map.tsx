@@ -1,21 +1,28 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Map, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
+import { clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { addHistory, removeHistory } from '../../../redux/slices/historySlice';
 import { setCenter } from '../../../redux/slices/mapSlice'; 
+import PlaceModal from './placeModal';
+
+interface Place {
+  id: string;
+  place_name: string;
+  address_name: string;
+  y: number;
+  x: number;
+  category_group_code: string;
+}
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
-  } | null>(null);
-  const [bound, setBound] = useState<{
-    sw: kakao.maps.LatLng,
-    ne: kakao.maps.LatLng
   } | null>(null);
   const [loc, setLoc] = useState<{
     latitude: number,
@@ -24,8 +31,8 @@ export default function FoodMap() {
   const [places, setPlaces] = useState<any[]>([]);
   const [randomPlace, setRandomPlace] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false); 
-  const [mapBoundsChanged, setMapBoundsChanged] = useState(false);
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
   const historyPlaces = useSelector((state: RootState) => state.history.places);
@@ -46,7 +53,8 @@ export default function FoodMap() {
   }
 
   const fetchPlaces = async () => {
-    if (!bound) return;
+    if (!mapRef.current) return;
+    const bounds = mapRef.current.getBounds();
     const ps = new window.kakao.maps.services.Places(); 
     const promises = [1, 2, 3].map((pages) =>
       new Promise((resolve) => {
@@ -57,7 +65,7 @@ export default function FoodMap() {
             resolve([]);
           }
         }, {
-          bounds: new window.kakao.maps.LatLngBounds(bound.sw, bound.ne),
+          bounds: new window.kakao.maps.LatLngBounds(bounds.getSouthWest(), bounds.getNorthEast()),
           size: 15,
           page: pages
         });
@@ -69,6 +77,7 @@ export default function FoodMap() {
       const allResults = results.flat();
       if (allResults.length > 0) {
         setPlaces(allResults);
+        console.log("data 준비완료")
       } else {
         console.warn("No places found in the current bounds.");
         setPlaces([]); 
@@ -83,8 +92,12 @@ export default function FoodMap() {
 
   const handlePlaceRandom = (place: any) => {
     console.log("랜덤추출완료")
+    dispatch(clearSelectedPlace());
+    setRandomPlace([]);
     setRandomPlace(place);
     setPlaces([place]); // 선택된 장소만 places로 설정
+    console.log(places)
+    console.log(randomPlace)
   };
 
   const handleResetLocation = () => {
@@ -94,28 +107,13 @@ export default function FoodMap() {
     }
   };
 
-  const handleMapLoad = (map: kakao.maps.Map) => {
+  const handleMapLoad = () => {
     console.log("지도로드완료")
     if (!mapLoaded) {
-      const bounds = map.getBounds();
-      setBound({
-        sw: bounds.getSouthWest(),
-        ne: bounds.getNorthEast(),
-      });
-      setMapLoaded(true); // 지도 로드 상태를 true로 설정합니다.
+      setMapLoaded(true);
+      fetchPlaces(); // 지도 로드 상태를 true로 설정합니다.
     }
   };
-
-  const handleBoundsChange = (map: kakao.maps.Map) => {
-    console.log("지도이동완료")
-    const bounds = map.getBounds();
-    setBound({
-      sw: bounds.getSouthWest(),
-      ne: bounds.getNorthEast(),
-    });
-    setMapBoundsChanged(true); // 지도 경계 변경 상태 설정
-  };
-
   const zoomIn = () => {
     const map = mapRef.current;
     if (map) {
@@ -130,12 +128,6 @@ export default function FoodMap() {
     }
   };
 
-  useEffect(() => {
-    if (mapLoaded && bound) {
-      fetchPlaces();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapLoaded, mapBoundsChanged]);
 
   useEffect(() => {
     if (mapRef.current) {
@@ -150,6 +142,28 @@ export default function FoodMap() {
       dispatch(removeHistory(place.id)); // 기존에 존재하는 장소를 삭제
     }
     dispatch(addHistory(place)); // 새로 저장
+  };
+
+  const handleMarkerClick = (place: Place) => {
+    setSelectedMarker(place);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMarker(null);
+  };
+
+  const handleSavePlace = () => {
+    if (selectedMarker) {
+      handleAddHistory(selectedMarker);
+      handleCloseModal();
+    }
+  };
+
+  const handleSetCenter = () => {
+    if (selectedMarker) {
+      dispatch(setCenter({ latitude: selectedMarker.y, longitude: selectedMarker.x }));
+      handleCloseModal();
+    }
   };
 
   const getMarkerImage = (type: string | null, place: any) => {
@@ -179,11 +193,11 @@ export default function FoodMap() {
           height: "100%",
           zIndex: 5,
         }}
+        isPanto
         level={3}
-        onCreate={(map) => {
-          handleMapLoad(map);
+        onCreate={() => {
+          handleMapLoad();
         }}
-        onBoundsChanged={handleBoundsChange}
         ref={mapRef}
       >
         {randomPlace && (
@@ -204,14 +218,8 @@ export default function FoodMap() {
                 }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
               }
             }}
-          >
-            {/* <MapInfoWindow position={{ lat: randomPlace.y, lng: randomPlace.x }}>
-              <div style={{ padding: '5px', color: '#000' }}>
-                <h4>{randomPlace.place_name}</h4>
-                <p>{randomPlace.address_name}</p>
-              </div>
-            </MapInfoWindow> */}
-          </MapMarker>
+            onClick={() => handleMarkerClick(randomPlace)}
+          />
         )}
         {selectedPlace && (
           <MapMarker
@@ -231,14 +239,8 @@ export default function FoodMap() {
                 }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
               }
             }}
-          >
-            {/* <MapInfoWindow position={{ lat: selectedPlace.y, lng: selectedPlace.x }}>
-              <div style={{ padding: '5px', color: '#000' }}>
-                <h4>{selectedPlace.place_name}</h4>
-                <p>{selectedPlace.address_name}</p>
-              </div>
-            </MapInfoWindow> */}
-          </MapMarker>
+            onClick={() => handleMarkerClick(selectedPlace)}
+          />
         )}
         {showMyLocationPin && userLocation && (
           <MapMarker
@@ -260,6 +262,14 @@ export default function FoodMap() {
           />
         )}
       </Map>
+      {selectedMarker && (
+        <PlaceModal
+          place={selectedMarker}
+          onClose={handleCloseModal}
+          onSave={handleSavePlace}
+          onSetCenter={handleSetCenter}
+        />
+      )}
       <div className="absolute z-10 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
       laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-0 laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
       tablet-l:h-17 tablet-l:w-[20rem] tablet-l:text-[1.7rem]
@@ -319,8 +329,7 @@ export default function FoodMap() {
 }
 
 
-/*  변경될때마다 리스트새로 받아오지 말고 버튼 누르면 새로 받아와라 
-    히스토리 마커 그림자
-    음식점일 떄 마커 변경
-    랜덤장소 결과 말고 다른 마커는 언제 지워져야 하지?
-    왜 모든 것이 두번씩 작동하지? */
+/*  왜 모든 것이 두번씩 작동하지?
+    인포 윈도우
+    히스토리 및 저장 전체 비우기
+    맨첨에 지도 로드 안되는 오류  */

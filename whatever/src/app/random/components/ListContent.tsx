@@ -83,6 +83,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
           address_name: place.road_address_name || place.address_name,
           y: place.y,
           x: place.x,
+          category_group_code: place.category_group_code
         }));
         dispatch(setPlaces(placesData));
         if (placesData.length > 0) {

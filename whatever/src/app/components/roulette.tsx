@@ -93,7 +93,6 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
     if (onShuffle) {
       await onShuffle();
     }
-
     if (data.length > 0) {
       const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
       setRandomIndices(newIndices);
