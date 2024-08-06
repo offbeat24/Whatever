@@ -7,6 +7,7 @@ import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
 import { clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { addHistory, removeHistory } from '../../../redux/slices/historySlice';
+import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { setCenter } from '../../../redux/slices/mapSlice'; 
 import PlaceModal from './placeModal';
 
@@ -27,7 +28,10 @@ export default function FoodMap() {
   const [loc, setLoc] = useState<{
     latitude: number,
     longitude: number
-  } | null>(null);
+  } | null>({
+    latitude: 37.3897837540429,
+    longitude: 126.950783269518
+  });
   const [places, setPlaces] = useState<any[]>([]);
   const [randomPlace, setRandomPlace] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false); 
@@ -35,10 +39,12 @@ export default function FoodMap() {
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
-  const historyPlaces = useSelector((state: RootState) => state.history.places);
+  const { places: historyPlaces } = useSelector((state: RootState) => state.history);
+  const { places: bookmarkedPlaces } = useSelector((state: RootState) => state.bookmark);
   const selectedPlace = useSelector((state: RootState) => state.selectedPlace.place);
   const selectedType = useSelector((state: RootState) => state.selectedPlace.type);
   const dispatch = useDispatch();
+  const panto = true;
   useKakaoLoader();
 
   const approve = (position: { coords: { latitude: number; longitude: number; }; }) => {
@@ -96,7 +102,6 @@ export default function FoodMap() {
     setRandomPlace([]);
     setRandomPlace(place);
     setPlaces([place]); // 선택된 장소만 places로 설정
-    console.log(places)
     console.log(randomPlace)
   };
 
@@ -108,10 +113,12 @@ export default function FoodMap() {
   };
 
   const handleMapLoad = () => {
-    console.log("지도로드완료")
-    if (!mapLoaded) {
-      setMapLoaded(true);
-      fetchPlaces(); // 지도 로드 상태를 true로 설정합니다.
+    if (mapRef.current){
+      console.log("지도로드완료")
+      if (!mapLoaded) {
+        setMapLoaded(true);
+        fetchPlaces(); // 지도 로드 상태를 true로 설정합니다.
+      }
     }
   };
   const zoomIn = () => {
@@ -145,6 +152,7 @@ export default function FoodMap() {
   };
 
   const handleMarkerClick = (place: Place) => {
+    dispatch(setCenter({ latitude: place.y, longitude: place.x }));
     setSelectedMarker(place);
   };
 
@@ -154,6 +162,12 @@ export default function FoodMap() {
 
   const handleSavePlace = () => {
     if (selectedMarker) {
+      const isBookmarked = bookmarkedPlaces.some(bookmarkedPlace => bookmarkedPlace.id === selectedMarker.id);
+      if (isBookmarked) {
+        dispatch(removeBookmark(selectedMarker.id));
+      } else {
+        dispatch(addBookmark(selectedMarker));
+      }
       handleAddHistory(selectedMarker);
       handleCloseModal();
     }
@@ -179,6 +193,7 @@ export default function FoodMap() {
     
   };
 
+  const isBookmarked = (placeId: string) => bookmarkedPlaces.some(bookmarkedPlace => bookmarkedPlace.id === placeId);
   
   return(
     <section className="relative w-full h-screen">
@@ -193,11 +208,9 @@ export default function FoodMap() {
           height: "100%",
           zIndex: 5,
         }}
-        isPanto
+        isPanto={panto}
         level={3}
-        onCreate={() => {
-          handleMapLoad();
-        }}
+        onCreate={handleMapLoad}
         ref={mapRef}
       >
         {randomPlace && (
@@ -268,6 +281,7 @@ export default function FoodMap() {
           onClose={handleCloseModal}
           onSave={handleSavePlace}
           onSetCenter={handleSetCenter}
+          isBookmarked={isBookmarked(selectedMarker.id)}
         />
       )}
       <div className="absolute z-10 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
@@ -330,6 +344,5 @@ export default function FoodMap() {
 
 
 /*  왜 모든 것이 두번씩 작동하지?
-    인포 윈도우
     히스토리 및 저장 전체 비우기
     맨첨에 지도 로드 안되는 오류  */
