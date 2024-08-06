@@ -7,7 +7,7 @@ interface Place {
   address_name: string;
   y: number;
   x: number;
-  category_group_code?: string;
+  category_group_code: string;
 }
 
 interface SelectedPlaceState {
