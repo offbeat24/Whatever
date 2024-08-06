@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { setPlaces } from '../../../redux/slices/searchSlice';
+import { setSelectedPlace, clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { setCenter } from '../../../redux/slices/mapSlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { removeHistory } from '../../../redux/slices/historySlice';
@@ -13,6 +14,7 @@ interface Place {
   address_name: string;
   y: number;
   x: number;
+  category_group_code: string;
 }
 
 interface ContentProps {
@@ -46,10 +48,10 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
         setFilteredPlaces(searchPlaces);
         break;
       case 'history':
-        setFilteredPlaces([...historyPlaces].reverse());
+        setFilteredPlaces(historyPlaces);
         break;
       case 'bookmark':
-        setFilteredPlaces([...bookmarkedPlaces].reverse());
+        setFilteredPlaces(bookmarkedPlaces);
         break;
       default:
         break;
@@ -61,8 +63,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
       const places = type === 'history' ? historyPlaces : bookmarkedPlaces;
       const currentKeyword = type === 'history' ? historyKeyword : bookmarkKeyword;
       const filtered = places.filter(place =>
-        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)
-      );
+        place.place_name.includes(currentKeyword) || place.address_name.includes(currentKeyword)).reverse();
       setFilteredPlaces(filtered.length > 0 ? filtered : []);
     }
   }, [historyKeyword, bookmarkKeyword, type, historyPlaces, bookmarkedPlaces]);
@@ -82,6 +83,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
           address_name: place.road_address_name || place.address_name,
           y: place.y,
           x: place.x,
+          category_group_code: place.category_group_code
         }));
         dispatch(setPlaces(placesData));
         if (placesData.length > 0) {
@@ -145,7 +147,9 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
   };
 
   const handlePlaceClick = (place: Place) => {
+    dispatch(clearSelectedPlace());
     dispatch(setCenter({ latitude: place.y, longitude: place.x }));
+    dispatch(setSelectedPlace({place, type}));
     closeMenu();
   };
 

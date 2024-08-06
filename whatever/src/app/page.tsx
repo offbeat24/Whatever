@@ -30,7 +30,7 @@ export default async function Home() {
             <article className='flex text-black font-extrabold items-start align-middle laptop:text-[3.75rem] tablet-l:text-[3rem] tablet:text-[2.8125rem] mobile:text-[1.5625rem]'>
               <p className='my-auto'>오늘은</p>
               <div className='laptop:w-[35rem] laptop:h-[6rem] tablet-l:w-[30rem] tablet-l:h-[5rem] tablet:w-[24rem] tablet:h-[4.5rem] mobile:w-[12rem] mobile:h-[2.5rem] bg-snow rounded-full content-around shadow-xl mx-8 mobile:mx-3'>
-                <Roulette textData={foodList}/>
+                <Roulette textData={foodList} dataFromMap={undefined}/>
               </div>
               <p className='my-auto'>먹자!</p>
             </article>
