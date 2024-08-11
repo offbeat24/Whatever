@@ -16,7 +16,7 @@ const useAPIData = (): string[] => {
         const items = json.items.map((item: APIItem) => item.name);
         setData(items);
       })
-      .catch(error => console.error('API 데이터 불러오기 실패:', error));
+      // .catch(error => console.error('API 데이터 불러오기 실패:', error));
   }, []);
 
   return data;

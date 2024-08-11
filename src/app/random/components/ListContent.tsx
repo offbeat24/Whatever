@@ -70,7 +70,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
 
   const performSearch = (key: string) => {
     if (!window.kakao || !window.kakao.maps) {
-      console.error("카카오맵 API가 로드되지 않았습니다.");
+      // console.error("카카오맵 API가 로드되지 않았습니다.");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
           dispatch(setCenter({ latitude: placesData[0].y, longitude: placesData[0].x }));
         }
       } else {
-        console.error("검색 결과가 없습니다.");
+        // console.error("검색 결과가 없습니다.");
         dispatch(setPlaces([]));
       }
     });

@@ -83,13 +83,13 @@ export default function FoodMap() {
       const allResults = results.flat();
       if (allResults.length > 0) {
         setPlaces(allResults);
-        console.log("data 준비완료")
+        // console.log("data 준비완료")
       } else {
-        console.warn("No places found in the current bounds.");
+        // console.warn("No places found in the current bounds.");
         setPlaces([]); 
       }
     } catch (error) {
-      console.error("Failed to fetch places: ", error);
+      // console.error("Failed to fetch places: ", error);
     }
   };
   useEffect(() => {
@@ -97,12 +97,12 @@ export default function FoodMap() {
   }, []);
 
   const handlePlaceRandom = (place: any) => {
-    console.log("랜덤추출완료")
+    // console.log("랜덤추출완료")
     dispatch(clearSelectedPlace());
     setRandomPlace([]);
     setRandomPlace(place);
     setPlaces([place]); // 선택된 장소만 places로 설정
-    console.log(randomPlace)
+    // console.log(randomPlace)
   };
 
   const handleResetLocation = () => {
@@ -114,7 +114,7 @@ export default function FoodMap() {
 
   const handleMapLoad = () => {
     if (mapRef.current){
-      console.log("지도로드완료")
+      // console.log("지도로드완료")
       if (!mapLoaded) {
         setMapLoaded(true);
         fetchPlaces(); // 지도 로드 상태를 true로 설정합니다.
@@ -143,7 +143,7 @@ export default function FoodMap() {
   }, [center]);
 
   const handleAddHistory = (place: any) => {
-    console.log("기록완료")
+    // console.log("기록완료")
     const placeExists = historyPlaces.some(historyPlace => historyPlace.id === place.id);
     if (placeExists) {
       dispatch(removeHistory(place.id)); // 기존에 존재하는 장소를 삭제
@@ -181,7 +181,7 @@ export default function FoodMap() {
   };
 
   const getMarkerImage = (type: string | null, place: any) => {
-    console.log(type,place);
+    // console.log(type,place);
     if (type === 'search' && place.category_group_code === 'FD6') {
       return '/logo-pin-2.svg';
     } if (type === 'bookmark') {

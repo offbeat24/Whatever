@@ -100,7 +100,7 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
       setInitialTextDisplayed(false);
       executedRef.current = false;
     } else {
-      console.warn("No data available to shuffle.");
+      // console.warn("No data available to shuffle.");
     }
   };
 
