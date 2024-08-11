@@ -17,13 +17,13 @@ const rootReducer = combineReducers({
 
 
 const createNoopStorage = () => ({
-    getItem(_key: string) {
+    getItem() {
       return Promise.resolve(null);
     },
     setItem(_key: string, value: any) {
       return Promise.resolve(value);
     },
-    removeItem(_key: string) {
+    removeItem() {
       return Promise.resolve();
     },
   });
