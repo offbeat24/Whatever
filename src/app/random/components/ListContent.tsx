@@ -259,7 +259,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
                       className={`absolute top-2 ${type === 'history' ? 'right-10' : 'right-2'}`}
                     >
                       <Image
-                        src={isBookmarked(place.id) ? '/BookedIcon.svg' : '/NotBookedIcon.svg'}
+                        src={isBookmarked(place.id) ? '/BookedIcon.svg' : '/notBookedIcon.svg'}
                         alt='bookmark'
                         width={24}
                         height={24}
