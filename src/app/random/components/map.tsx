@@ -9,6 +9,7 @@ import { clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { addHistory, removeHistory } from '../../../redux/slices/historySlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { setCenter } from '../../../redux/slices/mapSlice'; 
+import { setRandomPlace, clearRandomPlace } from '../../../redux/slices/randomSlice';
 import PlaceModal from './placeModal';
 
 interface Place {
@@ -33,12 +34,12 @@ export default function FoodMap() {
     longitude: 126.950783269518
   });
   const [places, setPlaces] = useState<any[]>([]);
-  const [randomPlace, setRandomPlace] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
   const center = useSelector((state: RootState) => state.map.center);
+  const randomPlace = useSelector((state: RootState) => state.random.randomPlace);
   const { places: historyPlaces } = useSelector((state: RootState) => state.history);
   const { places: bookmarkedPlaces } = useSelector((state: RootState) => state.bookmark);
   const selectedPlace = useSelector((state: RootState) => state.selectedPlace.place);
@@ -97,12 +98,9 @@ export default function FoodMap() {
   }, []);
 
   const handlePlaceRandom = (place: any) => {
-    // console.log("랜덤추출완료")
     dispatch(clearSelectedPlace());
-    setRandomPlace([]);
-    setRandomPlace(place);
-    setPlaces([place]); // 선택된 장소만 places로 설정
-    // console.log(randomPlace)
+    dispatch(clearRandomPlace()); // 기존 randomPlace 초기화
+    dispatch(setRandomPlace(place)); // 새로운 randomPlace 설정
   };
 
   const handleResetLocation = () => {
@@ -195,6 +193,13 @@ export default function FoodMap() {
 
   const isBookmarked = (placeId: string) => bookmarkedPlaces.some(bookmarkedPlace => bookmarkedPlace.id === placeId);
   
+  useEffect(() => {
+    if (randomPlace && selectedPlace && randomPlace.id !== selectedPlace.id) {
+      // 기존의 랜덤 마커와 현재 선택된 마커가 다르면 랜덤 마커를 삭제
+      dispatch(clearRandomPlace());
+    }
+  }, [randomPlace, selectedPlace, dispatch]);
+  
   return(
     <section className="relative w-full h-screen">
       <Map
@@ -285,7 +290,7 @@ export default function FoodMap() {
         />
       )}
       <div className="absolute z-10 space-x-10 top-0 left-1/2 transform -translate-x-1/2 flex flex-col justify-center p-1 my-[1.25rem]
-      laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-0 laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
+      laptop:transform-none laptop:top-auto laptop:bottom-0 laptop:right-[2rem] laptop:left-auto laptop:m-[2.1875rem] laptop:w-[27.5rem] laptop:h-20
       tablet-l:h-17 tablet-l:w-[20rem] tablet-l:text-[1.7rem]
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
       mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]

@@ -30,6 +30,7 @@ const selectedPlaceSlice = createSlice({
     },
     clearSelectedPlace(state) {
       state.place = null;
+      state.type = null;
     },
   },
 });

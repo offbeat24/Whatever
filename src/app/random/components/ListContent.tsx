@@ -236,7 +236,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
                                   mobile:h-20
                                 bg-snow rounded-lg shadow px-5 laptop:mb-2 text-start'
               onClick={() => handlePlaceClick(place)}>
-              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold'>{place.place_name}</p>
+              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold leading-0'>{place.place_name}</p>
               <p className='laptop:text-lg tablet-l:text-base tablet:text-sm font-medium'>{place.address_name}</p>
               <a href={`https://place.map.kakao.com/${place.id}`} target="_blank" rel="noopener noreferrer">
                 <Image
