@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { setPlaces } from '../../../redux/slices/searchSlice';
-import { setSelectedPlace, clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
+import { addOrUpdateSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { setCenter } from '../../../redux/slices/mapSlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { removeHistory } from '../../../redux/slices/historySlice';
@@ -147,9 +147,9 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
   };
 
   const handlePlaceClick = (place: Place) => {
-    dispatch(clearSelectedPlace());
+    // dispatch(clearSelectedPlace());
     dispatch(setCenter({ latitude: place.y, longitude: place.x }));
-    dispatch(setSelectedPlace({place, type}));
+    dispatch(addOrUpdateSelectedPlace({place, type}));
     closeMenu();
   };
 
@@ -236,7 +236,7 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
                                   mobile:h-20
                                 bg-snow rounded-lg shadow px-5 laptop:mb-2 text-start'
               onClick={() => handlePlaceClick(place)}>
-              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold'>{place.place_name}</p>
+              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold leading-0'>{place.place_name}</p>
               <p className='laptop:text-lg tablet-l:text-base tablet:text-sm font-medium'>{place.address_name}</p>
               <a href={`https://place.map.kakao.com/${place.id}`} target="_blank" rel="noopener noreferrer">
                 <Image

@@ -113,14 +113,16 @@ export default function Navigation() {
             </div>
           </div>
         </Link>
-        {['search', 'bookmark', 'history'].map((menu) => (
+        {['search', 'bookmark', 'history'].map((menu, index) => (
           <button
             key={menu}
             type="button"
-            className={`flex laptop:h-[5.9375rem] w-full h-full laptop:border-b-white laptop:border-b border-solid justify-center items-center cursor-pointer ${activeMenu === menu ? 'bg-white' : ''}`}
+            className={`flex laptop:h-[5.9375rem] w-full h-full laptop:border-b-white laptop:border-r-0 laptop:border-b border-solid justify-center items-center cursor-pointer 
+              ${activeMenu === menu ? 'bg-white' : ''} 
+              ${index !== 2 ? 'tablet-l:border-r-white tablet-l:border-r tablet:border-r-white tablet:border-r mobile:border-r-white mobile:border-r' : ''}`}
             onClick={() => handleMenuClick(menu)}
           >
-            <div className={`laptop:w-11 tablet:w-[2.25rem] ${activeMenu === menu ? 'text-orange-o3' : ''}`}>
+            <div className={`laptop:w-12 tablet:w-[2.25rem] ${activeMenu === menu ? 'text-orange-o3' : ''}`}>
               <Image
                 src={activeMenu === menu ? `/${`${menu.charAt(0).toUpperCase() + menu.slice(1) }Text`}_activate.svg` : `/${`${menu.charAt(0).toUpperCase() + menu.slice(1) }Text`}.svg`}
                 alt={menu}
