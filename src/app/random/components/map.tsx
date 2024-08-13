@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
-import { clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
+import { removeSelectedPlace, clearSelectedPlaces } from '../../../redux/slices/selectedPlaceSlice';
 import { addHistory, removeHistory } from '../../../redux/slices/historySlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { setCenter } from '../../../redux/slices/mapSlice'; 
@@ -36,14 +36,15 @@ export default function FoodMap() {
   const [places, setPlaces] = useState<any[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
-  const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [selectedMarker, setSelectedMarker] = useState<Place | null>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
+
   const center = useSelector((state: RootState) => state.map.center);
   const randomPlace = useSelector((state: RootState) => state.random.randomPlace);
   const { places: historyPlaces } = useSelector((state: RootState) => state.history);
   const { places: bookmarkedPlaces } = useSelector((state: RootState) => state.bookmark);
-  const selectedPlace = useSelector((state: RootState) => state.selectedPlace.place);
-  const selectedType = useSelector((state: RootState) => state.selectedPlace.type);
+  const selectedPlaces = useSelector((state: RootState) => state.selectedPlace.selectedPlaces);
+  
   const dispatch = useDispatch();
   const panto = true;
   useKakaoLoader();
@@ -93,12 +94,13 @@ export default function FoodMap() {
       // console.error("Failed to fetch places: ", error);
     }
   };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(approve, reject);
   }, []);
 
   const handlePlaceRandom = (place: any) => {
-    dispatch(clearSelectedPlace());
+    // dispatch(clearSelectedPlaces());
     dispatch(clearRandomPlace()); // 기존 randomPlace 초기화
     dispatch(setRandomPlace(place)); // 새로운 randomPlace 설정
   };
@@ -119,6 +121,7 @@ export default function FoodMap() {
       }
     }
   };
+
   const zoomIn = () => {
     const map = mapRef.current;
     if (map) {
@@ -171,12 +174,6 @@ export default function FoodMap() {
     }
   };
 
-  const handleSetCenter = () => {
-    if (selectedMarker) {
-      dispatch(setCenter({ latitude: selectedMarker.y, longitude: selectedMarker.x }));
-      handleCloseModal();
-    }
-  };
 
   const getMarkerImage = (type: string | null, place: any) => {
     // console.log(type,place);
@@ -190,15 +187,29 @@ export default function FoodMap() {
     return '/LocationPin.svg';
     
   };
+  
+  const handleRemoveMarker = () => {
+    if (selectedMarker) {
+      if (randomPlace && selectedMarker.id === randomPlace.id) {
+        dispatch(clearRandomPlace()); // selectedMarker가 randomPlace라면 randomPlace 초기화
+      }
+      dispatch(removeSelectedPlace(selectedMarker.id)); // 선택된 장소 제거
+      handleCloseModal(); // 모달 닫기
+    }
+  };
 
+  const handleClearSelectedPlace = () => {
+    dispatch(clearSelectedPlaces());
+    dispatch(clearRandomPlace());
+  }
   const isBookmarked = (placeId: string) => bookmarkedPlaces.some(bookmarkedPlace => bookmarkedPlace.id === placeId);
   
-  useEffect(() => {
-    if (randomPlace && selectedPlace && randomPlace.id !== selectedPlace.id) {
-      // 기존의 랜덤 마커와 현재 선택된 마커가 다르면 랜덤 마커를 삭제
-      dispatch(clearRandomPlace());
-    }
-  }, [randomPlace, selectedPlace, dispatch]);
+  // useEffect(() => {
+  //   if (randomPlace && selectedPlace && randomPlace.id !== selectedPlace.id) {
+  //     // 기존의 랜덤 마커와 현재 선택된 마커가 다르면 랜덤 마커를 삭제
+  //     dispatch(clearRandomPlace());
+  //   }
+  // }, [randomPlace, selectedPlace, dispatch]);
   
   return(
     <section className="relative w-full h-screen">
@@ -239,27 +250,27 @@ export default function FoodMap() {
             onClick={() => handleMarkerClick(randomPlace)}
           />
         )}
-        {selectedPlace && (
+        {selectedPlaces.map(({ place, type }) => (
           <MapMarker
-            key={selectedPlace.id}
-            position={{ lat: selectedPlace.y, lng: selectedPlace.x }}
-            title={selectedPlace.place_name}
+            key={place.id}
+            position={{ lat: place.y, lng: place.x }}
+            title={place.place_name}
             image={{
-              src: getMarkerImage(selectedType, selectedPlace),
+              src: getMarkerImage(type, place),
               size: {
                 width: 68,
                 height: 85,
-              }, // 마커이미지의 크기입니다
+              },
               options: {
                 offset: {
                   x: 27,
                   y: 69,
-                }, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-              }
+                },
+              },
             }}
-            onClick={() => handleMarkerClick(selectedPlace)}
+            onClick={() => handleMarkerClick(place)}
           />
-        )}
+        ))}
         {showMyLocationPin && userLocation && (
           <MapMarker
             position={{ lat: userLocation.latitude, lng: userLocation.longitude }}
@@ -285,7 +296,7 @@ export default function FoodMap() {
           place={selectedMarker}
           onClose={handleCloseModal}
           onSave={handleSavePlace}
-          onSetCenter={handleSetCenter}
+          onRemoveMarker={handleRemoveMarker}
           isBookmarked={isBookmarked(selectedMarker.id)}
         />
       )}
@@ -337,6 +348,20 @@ export default function FoodMap() {
           <Image
             src="/LocationIcon.svg"
             alt="Current location"
+            width={30}
+            height={30}
+            className="object-contain"
+          />
+        </button>
+        <button
+          type='button'
+          className="p-2 w-11 h-11 bg-white rounded-[5px] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]"
+          onClick={handleClearSelectedPlace}
+          aria-label="Clear All Marker"
+        >
+          <Image
+            src="/ClearMarkerIcon.svg"
+            alt="Clear All Marker"
             width={30}
             height={30}
             className="object-contain"

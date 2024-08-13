@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { setPlaces } from '../../../redux/slices/searchSlice';
-import { setSelectedPlace, clearSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
+import { addOrUpdateSelectedPlace } from '../../../redux/slices/selectedPlaceSlice';
 import { setCenter } from '../../../redux/slices/mapSlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { removeHistory } from '../../../redux/slices/historySlice';
@@ -147,9 +147,9 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
   };
 
   const handlePlaceClick = (place: Place) => {
-    dispatch(clearSelectedPlace());
+    // dispatch(clearSelectedPlace());
     dispatch(setCenter({ latitude: place.y, longitude: place.x }));
-    dispatch(setSelectedPlace({place, type}));
+    dispatch(addOrUpdateSelectedPlace({place, type}));
     closeMenu();
   };
 

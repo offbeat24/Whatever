@@ -1,4 +1,3 @@
-// src/redux/slices/selectedPlaceSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Place {
@@ -10,30 +9,47 @@ interface Place {
   category_group_code: string;
 }
 
+interface SelectedPlace {
+  place: Place;
+  type: string;
+}
+
 interface SelectedPlaceState {
-  place: Place | null;
-  type: string | null;
+  selectedPlaces: SelectedPlace[];
 }
 
 const initialState: SelectedPlaceState = {
-  place: null,
-  type: null,
+  selectedPlaces: [],
 };
 
 const selectedPlaceSlice = createSlice({
   name: 'selectedPlace',
   initialState,
   reducers: {
-    setSelectedPlace(state, action: PayloadAction<{ place: Place, type: string }>) {
-      state.place = action.payload.place;
-      state.type = action.payload.type;
+    addOrUpdateSelectedPlace(state, action: PayloadAction<SelectedPlace>) {
+      const { place, type } = action.payload;
+      const existingIndex = state.selectedPlaces.findIndex(
+        selected => selected.place.id === place.id
+      );
+
+      if (existingIndex !== -1) {
+        if (state.selectedPlaces[existingIndex].type !== type) {
+          state.selectedPlaces[existingIndex].type = type;
+        }
+      } else {
+        state.selectedPlaces.push({ place, type });
+      }
     },
-    clearSelectedPlace(state) {
-      state.place = null;
-      state.type = null;
+    removeSelectedPlace(state, action: PayloadAction<string>) {
+      state.selectedPlaces = state.selectedPlaces.filter(
+        selected => selected.place.id !== action.payload
+      );
+    },
+    clearSelectedPlaces(state) {
+      state.selectedPlaces = [];
     },
   },
 });
 
-export const { setSelectedPlace, clearSelectedPlace } = selectedPlaceSlice.actions;
+export const { addOrUpdateSelectedPlace, removeSelectedPlace, clearSelectedPlaces } = selectedPlaceSlice.actions;
 export default selectedPlaceSlice.reducer;

@@ -14,18 +14,18 @@ interface PlaceModalProps {
   place: Place;
   onClose: () => void;
   onSave: () => void;
-  onSetCenter: () => void;
+  onRemoveMarker: () => void; // 마커 제거 함수
   isBookmarked: boolean; 
 }
 
-export default function PlaceModal({ place, onClose, onSave, onSetCenter, isBookmarked }: PlaceModalProps) {
+export default function PlaceModal({ place, onClose, onSave, onRemoveMarker, isBookmarked }: PlaceModalProps) {
   return (
     <button type='button' className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={onClose}>
       <button
         type='button'
         className="w-[19.375rem] h-[15rem] pt-5 
                   bg-snow rounded-[0.625rem] shadow-lg text-black flex flex-col items-center justify-start"
-        onClick={(e) => e.stopPropagation()} // 이벤트 전파 중단
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-2xl w-72 font-bold overflow-hidden whitespace-nowrap text-ellipsis">{place.place_name}</h2>
         <div className='flex w-60 h-[2.25rem] mt-4 border-[0.5px] shadow-none border-opacity-50 border-[#a5a5a5] items-center justify-center rounded-full'>
@@ -51,15 +51,15 @@ export default function PlaceModal({ place, onClose, onSave, onSetCenter, isBook
               className='objext-contain w-[2.5rem]'
             />
           </button>
-          <button type='button' onClick={onSetCenter} className="w-[2.5rem] space-y-[0.4rem]">
+          <button type='button' onClick={onRemoveMarker} className="w-[2.5rem] space-y-[0.4rem]">
             <Image
-              src='/CentralizeModal.svg'
-              alt='중심 좌표 설정하기'
+              src='/MarkerOff.svg' // 마커 상태에 따른 아이콘 변경
+              alt='마커 끄기'
               width={100}
               height={100}
               className='objext-contain w-[2.5rem]'
             />
-            <div className='text-[0.4375rem]'>중심 설정</div>
+            <div className='text-[0.4375rem]'>마커 끄기</div>
           </button>
         </div>
         <button type='button' onClick={onClose} className="font-bold font-[#a6a6a6] text-[0.625rem] opacity-80"> 
