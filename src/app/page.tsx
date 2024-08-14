@@ -14,14 +14,19 @@ export default async function Home() {
       <Header />
       <main className='absolute top-0 left-0 w-full'>
         <div className='flex flex-col h-screen'>
-          <section className='laptop:h-[35rem] tablet-l:h-[35rem] tablet:h-[48rem] mobile:h-[26.25rem] bg-custom-image bg-cover bg-center relative flex items-center justify-center' >
-            <div className ='w-full h-full laptop:text-[4.375rem] tablet-l:text-[3.5rem] tablet:text-[2.5rem] mobile:text-[1.25rem] font-extrabold bg-black bg-opacity-50 flex flex-col items-center justify-center'>
-              <div className='flex flex-col items-center laptop:flex-row laptop:justify-between laptop:space-x-28 tablet-l:flex-row tablet-l:justify-between tablet-l:space-x-11 tablet:space-y-3 mobile:space-y-3'>
-                <div className='order-2 laptop:space-y laptop:order-1 tablet-l:order-1 [text-shadow:0px_1.6px_1.6px_rgba(0,0,0,0.25),0px_4px_8px_rgba(0,0,0,0.25)] flex flex-col my-auto text-center tablet-l:text-left laptop:text-left'> 
+          <section className='laptop:h-[35rem] tablet-l:h-[35rem] tablet:h-[48rem] mobile:h-[26.25rem]
+                              bg-custom-image bg-cover bg-center relative flex items-center justify-center' >
+            <div className ='w-full h-full laptop:text-[4.375rem] tablet-l:text-[3.5rem] tablet:text-[3.5rem] mobile:text-[1.8rem]
+                            font-extrabold bg-black bg-opacity-50 flex flex-col items-center justify-center'>
+              <div className='flex flex-col items-center laptop:flex-row laptop:justify-between
+                              laptop:space-x-28 tablet-l:flex-row tablet-l:justify-between tablet-l:space-x-11 tablet:space-y-3 mobile:space-y-3'>
+                <div className='order-2 laptop:space-y laptop:order-1 tablet-l:order-1
+                                [text-shadow:0px_1.6px_1.6px_rgba(0,0,0,0.25),0px_4px_8px_rgba(0,0,0,0.25)]
+                                flex flex-col my-auto text-center tablet-l:text-left laptop:text-left'> 
                   <p className='text-white'>오늘은 뭐 먹지?</p>
                   <p className='text-white'>더 이상 고민하지 마세요!</p>
                 </div>
-                <Image src={DLogo} alt='' className='drop-shadow-lg order-1 laptop:order-2 tablet-l:order-2 laptop:w-[15.875rem] tablet-l:w-[12.5rem] tablet:w-[18rem] mobile:w-[10rem]'/>
+                <Image src={DLogo} alt='' className='drop-shadow-lg order-1 laptop:order-2 tablet-l:order-2 laptop:w-[15.875rem] tablet-l:w-[12.5rem] tablet:w-[14rem] mobile:w-[8rem]'/>
                 
               </div>
             </div>

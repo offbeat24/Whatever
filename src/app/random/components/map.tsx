@@ -339,9 +339,10 @@ export default function FoodMap() {
             />
           </button>
         </div>
-        <button
+        <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
+          <button
           type='button'
-          className="p-2 w-11 h-11 bg-white rounded-[5px] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]"
+          className="p-2 w-11 h-11 bg-white rounded-[5px_5px_0px_0px] border-b-[rgba(0,0,0,0.10)] border-b border-solid"
           onClick={handleResetLocation}
           aria-label="Move to current location"
         >
@@ -355,7 +356,7 @@ export default function FoodMap() {
         </button>
         <button
           type='button'
-          className="p-2 w-11 h-11 bg-white rounded-[5px] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]"
+          className="p-2 w-11 h-11 bg-white rounded-[0px_0px_5px_5px] border-t-[rgba(0,0,0,0.10)] border-t border-solid"
           onClick={handleClearSelectedPlace}
           aria-label="Clear All Marker"
         >
@@ -367,6 +368,7 @@ export default function FoodMap() {
             className="object-contain"
           />
         </button>
+        </div>
       </div>
     </section>
   )
