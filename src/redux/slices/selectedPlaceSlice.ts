@@ -1,18 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface Place {
-  id: string;
-  place_name: string;
-  address_name: string;
-  y: number;
-  x: number;
-  category_group_code: string;
-}
-
-interface SelectedPlace {
-  place: Place;
-  type: string;
-}
+import { SelectedPlace, PlaceType } from '../../data/types';
 
 interface SelectedPlaceState {
   selectedPlaces: SelectedPlace[];

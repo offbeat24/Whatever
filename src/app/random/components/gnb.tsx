@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import ListContent from './ListContent';
+import { PlaceType } from '../../../data/types';
 
 export default function Navigation() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [activeMenu, setActiveMenu] = useState<PlaceType | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-  const handleMenuClick = (menu: string | null) => {
+  const handleMenuClick = (menu: PlaceType | null) => {
     setActiveMenu(menu === activeMenu ? null : menu);
     setIsExpanded(false);
   };
@@ -113,7 +114,7 @@ export default function Navigation() {
             </div>
           </div>
         </Link>
-        {['search', 'bookmark', 'history'].map((menu, index) => (
+        {(['search', 'bookmark', 'history'] as PlaceType[]).map((menu, index) => (
           <button
             key={menu}
             type="button"

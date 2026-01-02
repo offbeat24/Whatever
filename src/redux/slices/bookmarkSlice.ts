@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Place } from '../../data/types';
 
 interface BookmarkState {
-  places: any[];
+  places: Place[];
 }
 
 const initialState: BookmarkState = {
@@ -12,7 +13,7 @@ const bookmarkSlice = createSlice({
   name: 'bookmark',
   initialState,
   reducers: {
-    addBookmark(state, action: PayloadAction<any>) {
+    addBookmark(state, action: PayloadAction<Place>) {
       state.places.push(action.payload);
     },
     removeBookmark(state, action: PayloadAction<string>) {
