@@ -1,0 +1,70 @@
+{
+  "tab_id": 1337888378,
+  "entries": [
+    {
+      "sequence": 1,
+      "kind": "log",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "url": "chrome-extension://invalid/",
+      "timestamp": 1790669483259.812,
+      "truncated": false
+    },
+    {
+      "sequence": 2,
+      "kind": "log",
+      "level": "error",
+      "text": "Permissions policy violation: unload is not allowed in this document.",
+      "url": "chrome-extension://mbnbehikldjhnfehhnaidhjhoofhpehk/inspector.b9415ea5.js",
+      "line": 405,
+      "timestamp": 1790669483324.856,
+      "truncated": false
+    },
+    {
+      "sequence": 3,
+      "kind": "console",
+      "level": "log",
+      "text": "%c[rhwp]%c DevTools 사용 가능 — rhwpDev.help() 로 시작하세요 color:#2563eb;font-weight:bold color:inherit",
+      "url": "chrome-extension://pgakpjflombjmehnebnbpnalhegaanag/dev-tools-inject.js",
+      "line": 154,
+      "column": 11,
+      "timestamp": 1790669483626.196,
+      "truncated": false
+    },
+    {
+      "sequence": 4,
+      "kind": "console",
+      "level": "log",
+      "text": "Failed to load Kakao Maps script, retrying in 2 ms.",
+      "url": "http://localhost:3011/_next/static/chunks/662-df0bd0628fbcb1ba.js",
+      "line": 4,
+      "column": 1685,
+      "timestamp": 1790669483627.092,
+      "truncated": false
+    },
+    {
+      "sequence": 5,
+      "kind": "console",
+      "level": "log",
+      "text": "Failed to load Kakao Maps script, retrying in 8 ms.",
+      "url": "http://localhost:3011/_next/static/chunks/662-df0bd0628fbcb1ba.js",
+      "line": 4,
+      "column": 1685,
+      "timestamp": 1790669483663.117,
+      "truncated": false
+    },
+    {
+      "sequence": 6,
+      "kind": "console",
+      "level": "log",
+      "text": "Failed to load Kakao Maps script, retrying in 24 ms.",
+      "url": "http://localhost:3011/_next/static/chunks/662-df0bd0628fbcb1ba.js",
+      "line": 4,
+      "column": 1685,
+      "timestamp": 1790669483715.878,
+      "truncated": false
+    }
+  ],
+  "next_since": 6,
+  "truncated": false
+}

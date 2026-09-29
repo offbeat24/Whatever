@@ -1,0 +1,11 @@
+├─ next@npm:15.5.24
+│  └─ postcss@npm:8.5.28 (via npm:8.5.28)
+│
+├─ next@npm:15.5.24 [b0b0a]
+│  └─ postcss@npm:8.5.28 (via npm:8.5.28)
+│
+├─ tailwindcss@npm:3.4.9
+│  └─ postcss@npm:8.5.28 (via npm:8.5.28)
+│
+└─ whatever@workspace:.
+   └─ postcss@npm:8.5.28 (via npm:8.5.28)
