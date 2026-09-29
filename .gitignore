@@ -47,3 +47,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.bass/cache/
+.bass/semantic/cache/
+.bass/semantic/usage.json
+.bass/semantic/*.lock/
+.bass/semantic/slots/
+.bass/local.yaml
+!.bass/evidence/**/*.log

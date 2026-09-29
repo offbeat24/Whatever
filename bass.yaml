@@ -1,0 +1,40 @@
+bass:
+  version: 0.7.0
+  profiles: [common, web]
+
+project:
+  name: "Whatever"
+
+execution:
+  depth: adaptive
+  verification: affected
+  loop:
+    no_progress_limit: 1
+  parallel:
+    max_agents: 2
+
+context:
+  max_chars: 12000
+
+semantic:
+  mode: off
+
+capabilities:
+  specification: builtin
+  simplicity: ponytail
+  ui_direction: bass
+  ui_canvas: off
+  html_report: bass
+
+adapters:
+  primary: codex
+  compatibility: [claude, cursor]
+  runner: host
+  context_provider: bass
+  workspace_executor: host
+  collaboration_provider: events
+
+evaluators:
+  level1: []
+  level2: []
+  level3: []

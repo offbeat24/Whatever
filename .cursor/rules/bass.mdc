@@ -1,0 +1,8 @@
+---
+description: BASS runtime entrypoint
+alwaysApply: true
+---
+
+<!-- bass:managed:start -->
+Follow the BASS routing in AGENTS.md; load the task guide only for implementation.
+<!-- bass:managed:end -->

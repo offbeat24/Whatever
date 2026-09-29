@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { SelectedPlace, PlaceType } from '../../data/types';
+import { SelectedPlace } from '../../data/types';
 
 interface SelectedPlaceState {
   selectedPlaces: SelectedPlace[];
