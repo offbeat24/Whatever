@@ -1,0 +1,13 @@
+➤ YN0000: ┌ Resolution step
+➤ YN0002: │ eslint-config-airbnb-typescript@npm:18.0.0 [b0b0a] doesn't provide eslint-plugin-import (p2aae3), requested by eslint-config-airbnb-base
+➤ YN0002: │ whatever@workspace:. doesn't provide eslint-plugin-import (p0afab), requested by eslint-config-airbnb
+➤ YN0002: │ whatever@workspace:. doesn't provide eslint-plugin-jsx-a11y (pd8cdb), requested by eslint-config-airbnb
+➤ YN0002: │ whatever@workspace:. doesn't provide eslint-plugin-react (pa8acd), requested by eslint-config-airbnb
+➤ YN0002: │ whatever@workspace:. doesn't provide eslint-plugin-react-hooks (pdd8ea), requested by eslint-config-airbnb
+➤ YN0000: │ Some peer dependencies are incorrectly met; run yarn explain peer-requirements <hash> for details, where <hash> is the six-letter p-prefixed code
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Fetch step
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Link step
+➤ YN0000: └ Completed
+➤ YN0000: Done with warnings in 0s 371ms

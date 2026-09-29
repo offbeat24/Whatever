@@ -1,0 +1,16 @@
+[bass gate pre-review] task=WHATEVER-002 => PASSED
+  [PASS] status-review-ready — 인간 리뷰 준비는 ACTIVE 또는 REVIEW 상태에서 가능하다 (current status: REVIEW)
+  [PASS] run-record — run record 존재 및 스키마 유효
+  [PASS] execution-contract — run record가 현재 정규화된 ExecutionPlan 계약과 일치한다
+  [PASS] capability-invocations — 외부 capability 호출이 이벤트와 일치하고 최신 시도가 완료되었다
+  [PASS] evaluations — 요구된 검증 통과
+  [PASS] evidence-manifest — evidence 경로와 SHA-256이 유효하고 필수 종류가 존재한다
+  [PASS] context-freshness — 사용한 컨텍스트가 실행 후 변경되지 않았다
+  [PASS] scope-diff — 실제 변경이 run record와 Allowed/Forbidden scope에 일치한다
+  [PASS] attempt-lineage — 시도 이력과 최종 결과가 일관되고 예산 이내다
+  [PASS] model-deviation-reasons — 모델 라우팅 권고를 벗어난 경우 이유가 기록됨
+  [HUMAN] not-verified — 검증되지 않은 항목이 명시됨 (인간 판단 대상) (The Kakao Maps SDK failed to load in the local browser session; this external map behavior was outside the dependency-upgrade scope and was not compared against a pre-change browser baseline.; The merged default branch must be rescanned by GitHub before claiming the Dependabot alert count is zero.)
+  [PASS] critic-findings — 미해결 high/medium critic finding 없음 (open high/medium: 0)
+  [PASS] docs-updated — 문서 변경 필요 여부 확인 (no doc changes needed)
+  [PASS] rollback — 롤백 또는 복구 방법 기록
+  [PASS] lessons — 교훈 기록 여부 판단됨 (no lessons recorded (judged not needed))

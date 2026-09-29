@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { AnimatePresence, motion, Variants, type Target } from 'framer-motion';
 import Image from 'next/image';
 import { KakaoPlace } from '../../data/types';
 
@@ -13,14 +13,7 @@ interface Props {
   onAddHistory?: (place: KakaoPlace) => void,
 }
 
-interface VariantProps {
-  scaleY: number;
-  y: string | number;
-  opacity: number;
-  filter?: string;
-}
-
-export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceRandom, onAddHistory }: Props): JSX.Element {
+export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceRandom, onAddHistory }: Props): React.JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
@@ -109,7 +102,7 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
   const variants: Variants = {
     initial: { scaleY: 0.3, y: '-50%', opacity: 0 },
     animate: ({ isLast }) => {
-      const props: VariantProps = { scaleY: 1, y: 0, opacity: 1 };
+      const props: Target = { scaleY: 1, y: 0, opacity: 1 };
       if (!isLast) props.filter = 'blur(1.5px)';
 
       return props;
