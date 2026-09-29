@@ -1,7 +1,7 @@
 ---
 id: WHATEVER-002
 title: Dependabot 보안 취약점 수정
-status: NEEDS_DECISION
+status: DONE
 type: bug
 profile: web
 
@@ -30,6 +30,8 @@ coordination:
     - .bass/events.jsonl
 
 loop:
+  max_attempts: 3
+  max_minutes: 90
   stop_when:
     - acceptance criteria pass
     - required evaluators pass
