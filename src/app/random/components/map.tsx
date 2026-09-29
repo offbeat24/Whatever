@@ -11,15 +11,7 @@ import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice
 import { setCenter } from '../../../redux/slices/mapSlice'; 
 import { setRandomPlace, clearRandomPlace } from '../../../redux/slices/randomSlice';
 import PlaceModal from './placeModal';
-
-interface Place {
-  id: string;
-  place_name: string;
-  address_name: string;
-  y: number;
-  x: number;
-  category_group_code: string;
-}
+import { Place, KakaoPlace, PlaceType, KakaoPlaceResponse } from '../../../data/types';
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
@@ -33,7 +25,7 @@ export default function FoodMap() {
     latitude: 37.3897837540429,
     longitude: 126.950783269518
   });
-  const [places, setPlaces] = useState<any[]>([]);
+  const [places, setPlaces] = useState<KakaoPlace[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false); 
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<Place | null>(null);
@@ -82,9 +74,15 @@ export default function FoodMap() {
 
     try {
       const results = await Promise.all(promises);
-      const allResults = results.flat();
-      if (allResults.length > 0) {
-        setPlaces(allResults);
+      const allResults = results.flat() as KakaoPlaceResponse[];
+      // y, x를 number로 변환
+      const convertedPlaces: KakaoPlace[] = allResults.map(place => ({
+        ...place,
+        y: typeof place.y === 'string' ? parseFloat(place.y) : place.y,
+        x: typeof place.x === 'string' ? parseFloat(place.x) : place.x,
+      }));
+      if (convertedPlaces.length > 0) {
+        setPlaces(convertedPlaces);
         // console.log("data 준비완료")
       } else {
         // console.warn("No places found in the current bounds.");
@@ -99,10 +97,18 @@ export default function FoodMap() {
     navigator.geolocation.getCurrentPosition(approve, reject);
   }, []);
 
-  const handlePlaceRandom = (place: any) => {
+  const handlePlaceRandom = (place: KakaoPlace) => {
     // dispatch(clearSelectedPlaces());
+    const placeData: Place = {
+      id: place.id,
+      place_name: place.place_name,
+      address_name: place.address_name,
+      y: place.y,
+      x: place.x,
+      category_group_code: place.category_group_code,
+    };
     dispatch(clearRandomPlace()); // 기존 randomPlace 초기화
-    dispatch(setRandomPlace(place)); // 새로운 randomPlace 설정
+    dispatch(setRandomPlace(placeData)); // 새로운 randomPlace 설정
   };
 
   const handleResetLocation = () => {
@@ -143,13 +149,21 @@ export default function FoodMap() {
     }
   }, [center]);
 
-  const handleAddHistory = (place: any) => {
+  const handleAddHistory = (place: KakaoPlace) => {
     // console.log("기록완료")
-    const placeExists = historyPlaces.some(historyPlace => historyPlace.id === place.id);
+    const placeData: Place = {
+      id: place.id,
+      place_name: place.place_name,
+      address_name: place.address_name,
+      y: place.y,
+      x: place.x,
+      category_group_code: place.category_group_code,
+    };
+    const placeExists = historyPlaces.some(historyPlace => historyPlace.id === placeData.id);
     if (placeExists) {
-      dispatch(removeHistory(place.id)); // 기존에 존재하는 장소를 삭제
+      dispatch(removeHistory(placeData.id)); // 기존에 존재하는 장소를 삭제
     }
-    dispatch(addHistory(place)); // 새로 저장
+    dispatch(addHistory(placeData)); // 새로 저장
   };
 
   const handleMarkerClick = (place: Place) => {
@@ -175,7 +189,7 @@ export default function FoodMap() {
   };
 
 
-  const getMarkerImage = (type: string | null, place: any) => {
+  const getMarkerImage = (type: PlaceType | null, place: Place) => {
     // console.log(type,place);
     if (type === 'search' && place.category_group_code === 'FD6') {
       return '/logo-pin-2.svg';

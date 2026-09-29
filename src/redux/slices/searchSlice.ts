@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Place } from '../../data/types';
 
 interface SearchState {
-  places: any[];
+  places: Place[];
   keyword: string;
 }
 
@@ -14,7 +15,7 @@ const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
-    setPlaces(state, action: PayloadAction<any[]>) {
+    setPlaces(state, action: PayloadAction<Place[]>) {
       state.places = action.payload;
     },
     setKeyword(state, action: PayloadAction<string>) {

@@ -3,13 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import Image from 'next/image';
+import { KakaoPlace } from '../../data/types';
 
 interface Props {
   textData : string[],
-  dataFromMap : any[] | undefined,
+  dataFromMap : KakaoPlace[] | undefined,
   onShuffle? : () => Promise<void>,
-  onPlaceRandom?: (place: any) => void,
-  onAddHistory?: (place: any) => void,
+  onPlaceRandom?: (place: KakaoPlace) => void,
+  onAddHistory?: (place: KakaoPlace) => void,
 }
 
 interface VariantProps {

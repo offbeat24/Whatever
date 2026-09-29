@@ -1,14 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-
-interface Place {
-  id: string;
-  place_name: string;
-  address_name: string;
-  y: number;
-  x: number;
-  category_group_code: string;
-}
+import { Place } from '../../../data/types';
 
 interface PlaceModalProps {
   place: Place;

@@ -7,18 +7,10 @@ import { addOrUpdateSelectedPlace } from '../../../redux/slices/selectedPlaceSli
 import { setCenter } from '../../../redux/slices/mapSlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { removeHistory } from '../../../redux/slices/historySlice';
-
-interface Place {
-  id: string;
-  place_name: string;
-  address_name: string;
-  y: number;
-  x: number;
-  category_group_code: string;
-}
+import { Place, PlaceType, KakaoPlaceResponse } from '../../../data/types';
 
 interface ContentProps {
-  type: string;
+  type: PlaceType;
   closeMenu: () => void;
   isMenuOpen: boolean;
 }
@@ -77,13 +69,13 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
     const ps = new window.kakao.maps.services.Places();
     ps.keywordSearch(key, (data, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        const placesData = data.map((place: any) => ({
+        const placesData: Place[] = (data as unknown as KakaoPlaceResponse[]).map((place) => ({
           id: place.id,
           place_name: place.place_name,
           address_name: place.road_address_name || place.address_name,
-          y: place.y,
-          x: place.x,
-          category_group_code: place.category_group_code
+          y: typeof place.y === 'string' ? parseFloat(place.y) : place.y,
+          x: typeof place.x === 'string' ? parseFloat(place.x) : place.x,
+          category_group_code: place.category_group_code || ''
         }));
         dispatch(setPlaces(placesData));
         if (placesData.length > 0) {
