@@ -1,7 +1,7 @@
 ---
 id: WHATEVER-003
 title: 제품 컨셉과 중장기 방향 기록
-status: NEEDS_EXPERT
+status: DONE
 type: docs
 profile: web
 
@@ -26,6 +26,8 @@ coordination:
     - .bass/events.jsonl
 
 loop:
+  max_attempts: 3
+  max_minutes: 600
   stop_when:
     - acceptance criteria pass
   required_evidence: []
