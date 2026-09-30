@@ -13,7 +13,7 @@
 
 ## Stack
 
-- Node.js 20 or newer, Next.js 15.5.24, React 19, TypeScript, Tailwind CSS.
+- Node.js 20 or newer, Next.js 14.1.0, React 18, TypeScript, Tailwind CSS.
 - Redux Toolkit and redux-persist manage map-page state.
 - react-kakao-maps-sdk loads Kakao Maps; the browser loader reads NEXT_PUBLIC_MAP_KEY.
 - Yarn lockfile is present. package.json scripts expose dev, build, start, and lint; no test script is configured.
