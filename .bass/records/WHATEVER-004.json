@@ -1,0 +1,175 @@
+{
+  "record_version": 2,
+  "execution_contract": {
+    "contract_version": 1,
+    "plan_fingerprint": "51ce71ce83da7017bc98038b768dcd0ae9eae11d5dd2c24a84c675c46c4dcf7f",
+    "capability_calls": []
+  },
+  "capability_invocations": [],
+  "task_id": "WHATEVER-004",
+  "summary_of_changes": "사용자가 설명한 현재 경험과 미래 방향을 구분해 TODO.md에 제안 작업 순서로 정리했다.",
+  "why": "사용자가 말한 제품 방향을 다음에 논의하고 진행할 수 있는 체크리스트로 만들기 위해서다.",
+  "files_changed": [
+    ".bass/events.jsonl",
+    ".bass/evidence/WHATEVER-004/bass-pre-review.log",
+    ".bass/evidence/WHATEVER-004/bass-pre-task.log",
+    ".bass/evidence/WHATEVER-004/bass-task-validate.log",
+    ".bass/evidence/WHATEVER-004/git-diff-check.log",
+    ".bass/evidence/WHATEVER-004/verification-summary.md",
+    ".bass/records/WHATEVER-004.json",
+    ".bass/tasks/WHATEVER-004.md",
+    "TODO.md"
+  ],
+  "models_used": [],
+  "verification": {
+    "evaluations_run": [
+      {
+        "name": "bass task validate WHATEVER-004",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "bass gate pre-task WHATEVER-004",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "git diff --check",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "Documentation acceptance review",
+        "level": 2,
+        "status": "pass"
+      }
+    ],
+    "not_verified": [
+      "No application build or browser check was run because this task changes product documentation only.",
+      "The user-described target and future direction have not been validated through user research."
+    ]
+  },
+  "critic_findings": {
+    "total": 0,
+    "open_high_or_medium": 0
+  },
+  "known_limitations": [
+    "The mobile app form, map-provider approach, login data scope, schedules, and group-selection rules remain undecided.",
+    "The BASS pre-review gate is blocked by uncommitted PRODUCT.md, DESIGN.md, and TECH.md changes from WHATEVER-003 in the shared workspace."
+  ],
+  "out_of_scope_findings": [],
+  "docs_updated": {
+    "needed": true,
+    "updated": [
+      "TODO.md"
+    ]
+  },
+  "lessons": {
+    "recorded": false,
+    "candidates": []
+  },
+  "rollback": {
+    "method": "Remove TODO.md and the WHATEVER-004 BASS artifacts; no application code changed."
+  },
+  "design": {
+    "rendered_verification": false,
+    "notes": "No UI changed; visual verification was not applicable.",
+    "evidence_paths": [],
+    "viewports": []
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "pass",
+      "started_at": "2026-09-30T06:48:17.379Z",
+      "completed_at": "2026-09-30T06:51:24.359Z"
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-004/bass-pre-task.log",
+      "sha256": "655f0dadc57dc2063072cfdd0522dca9ec157b71074e0d0f36f126b43114c4ba",
+      "produced_by": "bass gate pre-task WHATEVER-004",
+      "at": "2026-09-30T06:51:24.359Z"
+    },
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-004/bass-task-validate.log",
+      "sha256": "2502d4e8e5b672a681103f072a3984ea8a7c76e7a66007892c4b0a57d95a264b",
+      "produced_by": "bass task validate WHATEVER-004",
+      "at": "2026-09-30T06:51:24.359Z"
+    },
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-004/git-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "produced_by": "git diff --check",
+      "at": "2026-09-30T06:51:24.359Z"
+    },
+    {
+      "kind": "report",
+      "path": ".bass/evidence/WHATEVER-004/verification-summary.md",
+      "sha256": "7b319e8c570f6b4d7584a085bd2f7eac3375f1449627136f8e6d056ad9b032f2",
+      "produced_by": "Verification evidence summary",
+      "at": "2026-09-30T06:51:24.359Z"
+    }
+  ],
+  "context": {
+    "sources": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "8d73045b444954ef1da10259ea5783cf0af1b4eeb4f0f1bf38c0ca0beb8ed4dc",
+        "chars": 499
+      },
+      {
+        "path": "PRODUCT.md",
+        "sha256": "0ae735933724c43a70ca39ae5da68426014e98d40e183818cad40dc43b7b43ea",
+        "chars": 3059
+      },
+      {
+        "path": "DESIGN.md",
+        "sha256": "6b0d9fb99fcb767884a2644b118da73e62c91fae4c387a1b7af1fa56a0df17ce",
+        "chars": 3029
+      },
+      {
+        "path": "TECH.md",
+        "sha256": "602a53e48e9aeff5e3932d0e791981b48bb31ab3eb86ff8735689c7721fff17d",
+        "chars": 2853
+      },
+      {
+        "path": ".bass/tasks/WHATEVER-004.md",
+        "sha256": "bd5ebf06cb9af5d0ff5198b72938119ca5630804714910377fe4bdf03867e0fd",
+        "chars": 2235
+      }
+    ],
+    "total_chars": 11675,
+    "omitted": []
+  },
+  "usage": {
+    "turns": "unknown",
+    "attempts": 1,
+    "input_tokens": "unknown",
+    "output_tokens": "unknown",
+    "cached_input_tokens": "unknown",
+    "evaluator_tokens": "unknown",
+    "tool_calls": "unknown",
+    "subagents": 0,
+    "estimated_cost": "unknown"
+  },
+  "scope": {
+    "actual_files": [
+      ".bass/events.jsonl",
+      ".bass/evidence/WHATEVER-004/bass-pre-review.log",
+      ".bass/evidence/WHATEVER-004/bass-pre-task.log",
+      ".bass/evidence/WHATEVER-004/bass-task-validate.log",
+      ".bass/evidence/WHATEVER-004/git-diff-check.log",
+      ".bass/evidence/WHATEVER-004/verification-summary.md",
+      ".bass/records/WHATEVER-004.json",
+      ".bass/tasks/WHATEVER-004.md",
+      "TODO.md"
+    ],
+    "outside_allowed": [],
+    "forbidden_touched": []
+  }
+}
