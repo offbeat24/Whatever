@@ -10,17 +10,22 @@
 
 ## Purpose
 
-- CONFIRMED from the current UI: make choosing a meal quick through a menu roulette and restaurant map.
+- DECIDED BY USER: help people who cannot decide what to eat move from a random menu or restaurant suggestion to a place they may want to visit.
+- The product should feel like one service across web and a future mobile app. This is a design goal; a mobile app is not currently implemented.
 
 ## Design principles
 
-- Keep the meal choice and restaurant discovery as the two visible entry points.
+- Keep menu selection and restaurant discovery accessible as two connected ways to start.
+- Keep the current menu-selection function available if the landing page is redesigned or repurposed.
+- Let people reroll, save candidates, and check restaurant details without forcing an immediate choice.
+- Keep the same product identity, core information, and interaction language across web and mobile app; adapt layout to the device so the experience still feels like one product.
 - Preserve the responsive layouts already defined in the application.
 - Treat current visual choices as implementation evidence, not as validated user preferences.
 
 ## Personas
 
-- MISSING: no user research or persona source is present.
+- PROPOSED from the user's concept, not validated by research: people who have not decided what to eat or where to go.
+- No demographic profile or research-backed persona is documented.
 
 ## Color palette
 
@@ -34,6 +39,7 @@
 ## Layout and responsiveness
 
 - CONFIRMED Tailwind breakpoints: mobile 320px, tablet 744px, tablet-l 1024px, laptop 1280px.
+- The unified web and mobile-app experience is a future design goal; the current repository contains a responsive web app only.
 
 ## Interaction states
 
@@ -64,3 +70,4 @@
 ## Decisions and history
 
 - 2026-09-29: recorded current UI evidence; no new visual direction was selected.
+- 2026-09-30: recorded the user's cross-platform consistency goal and the requirement to retain menu selection if the landing page changes.
