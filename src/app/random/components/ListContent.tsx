@@ -8,6 +8,7 @@ import { setCenter } from '../../../redux/slices/mapSlice';
 import { addBookmark, removeBookmark } from '../../../redux/slices/bookmarkSlice';
 import { removeHistory } from '../../../redux/slices/historySlice';
 import { Place, PlaceType, KakaoPlaceResponse } from '../../../data/types';
+import IconButton from '../../components/IconButton';
 
 interface ContentProps {
   type: PlaceType;
@@ -180,17 +181,15 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
     <div className='relative p-5 pt-[1.875rem] h-full flex flex-col'>
       <div className='sticky top-0 shadow-md bg-white z-10'>
         <form onSubmit={handleSearch} className="relative">
-          <button 
-            type='submit' 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2">
-            <Image
-              src='/SearchIconOrange.svg'
-              alt="Search"
-              width={24}
-              height={24}
-              className="object-contain"
-            />
-          </button>
+          <IconButton
+            type='submit'
+            label='검색'
+            src='/SearchIconOrange.svg'
+            imageWidth={24}
+            imageHeight={24}
+            imageClassName='object-contain'
+            className="absolute left-3 top-1/2 transform -translate-y-1/2"
+          />
           <input
             type='text'
             className="laptop:w-[21.875rem] laptop:h-10 laptop:px-9 
@@ -202,35 +201,40 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
             onChange={handleKeywordChange}
             placeholder='검색어를 입력하세요'
           />
-          <button 
-            type="button" 
-            onClick={clearKeyword} 
-            className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <Image
-              src='/ClearIcon.svg'
-              alt="clear"
-              width={24}
-              height={24}
-              className="object-contain"
-            />
-          </button>
+          <IconButton
+            type='button'
+            onClick={clearKeyword}
+            label='검색어 지우기'
+            src='/ClearIcon.svg'
+            imageWidth={24}
+            imageHeight={24}
+            imageClassName='object-contain'
+            className="absolute right-3 top-1/2 transform -translate-y-1/2"
+          />
         </form>
       </div>
       <div className='overflow-y-auto laptop:pt-5 tablet-l:pt-10 tablet:pt-9 mobile:pt-[1.125rem] grid laptop:gap-2 tablet-l:gap-5 tablet:gap-[0.875rem] mobile:gap-2 laptop:grid-cols-1 tablet:grid-cols-2'>
         {filteredPlaces.length > 0 ? (
           filteredPlaces.map((place) => (
-            <button
-              type='button'
+            <article
               key={place.id}
-              className='relative w-full laptop:h-[8.125rem] 
-                                  tablet-l:h-28 
-                                  tablet:h-20 
-                                  mobile:h-20
+              className='relative flex flex-col justify-center w-full laptop:h-[8.125rem]
+                                tablet-l:h-28
+                                tablet:h-20
+                                mobile:h-20
                                 bg-snow rounded-lg shadow px-5 laptop:mb-2 text-start'
-              onClick={() => handlePlaceClick(place)}>
-              <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold leading-0'>{place.place_name}</p>
-              <p className='laptop:text-lg tablet-l:text-base tablet:text-sm font-medium'>{place.address_name}</p>
-              <a href={`https://place.map.kakao.com/${place.id}`} target="_blank" rel="noopener noreferrer">
+            >
+              <button
+                type='button'
+                aria-label={`${place.place_name}, ${place.address_name} 지도에서 보기`}
+                className='absolute inset-0 z-0 w-full rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-o3'
+                onClick={() => handlePlaceClick(place)}
+              />
+              <div className='relative z-10 pointer-events-none'>
+                <p className='text-orange-o1 laptop:text-xl tablet-l:text-lg tablet:text-base font-bold leading-0'>{place.place_name}</p>
+                <p className='laptop:text-lg tablet-l:text-base tablet:text-sm font-medium'>{place.address_name}</p>
+              </div>
+              <a className='relative z-20 inline-block self-start' href={`https://place.map.kakao.com/${place.id}`} target="_blank" rel="noopener noreferrer">
                 <Image
                   src='/kakaomap_horizontal_en 1.png'
                   alt='kakaomap'
@@ -242,42 +246,30 @@ export default function ListContent({ type, closeMenu, isMenuOpen }: ContentProp
               {type !== 'search' && (
                 <>
                   {type === 'history' && (
-                    <button
+                    <IconButton
                       type='button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBookmarkClick(place);
-                      }}
-                      className={`absolute top-2 ${type === 'history' ? 'right-10' : 'right-2'}`}
-                    >
-                      <Image
-                        src={isBookmarked(place.id) ? '/BookedIcon.svg' : '/notBookedIcon.svg'}
-                        alt='bookmark'
-                        width={24}
-                        height={24}
-                        className='object-contain'
-                      />
-                    </button>
-                  )}
-                  <button
-                    type='button'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteClick(place.id);
-                    }}
-                    className={`absolute top-2 ${type === 'history' ? 'right-2' : 'right-2'}`}
-                  >
-                    <Image
-                      src='/DeleteIcon.svg'
-                      alt='delete'
-                      width={24}
-                      height={24}
-                      className='object-contain'
+                      onClick={() => handleBookmarkClick(place)}
+                      label={isBookmarked(place.id) ? '북마크 취소' : '북마크 저장'}
+                      src={isBookmarked(place.id) ? '/BookedIcon.svg' : '/notBookedIcon.svg'}
+                      imageWidth={24}
+                      imageHeight={24}
+                      imageClassName='object-contain'
+                      className='absolute top-1/2 -translate-y-1/2 z-20 right-10'
                     />
-                  </button>
+                  )}
+                  <IconButton
+                    type='button'
+                    onClick={() => handleDeleteClick(place.id)}
+                    label='삭제'
+                    src='/DeleteIcon.svg'
+                    imageWidth={24}
+                    imageHeight={24}
+                    imageClassName='object-contain'
+                    className='absolute top-1/2 -translate-y-1/2 z-20 right-2'
+                  />
                 </>
               )}
-            </button>
+            </article>
           ))
         ) : (
           <p className="text-center text-gray-500">검색 결과가 존재하지 않습니다.</p>

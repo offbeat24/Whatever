@@ -1,0 +1,10 @@
+[bass gate pre-task] task=WHATEVER-006 => PASSED
+  [PASS] status-ready — 작업 상태가 CAPTURED 또는 ACTIVE여야 한다 (current status: ACTIVE)
+  [PASS] section:Problem — "Problem" 섹션 존재 및 내용
+  [PASS] section:What we are shipping — "What we are shipping" 섹션 존재 및 내용
+  [PASS] section:Acceptance criteria — "Acceptance criteria" 섹션 존재 및 내용
+  [PASS] section:Verification — "Verification" 섹션 존재 및 내용
+  [PASS] section:Allowed scope — "Allowed scope" 섹션 존재 및 내용
+  [PASS] task-graph — task dependency와 owned path 계약이 유효하다
+  [PASS] active-task-limit — 동시 활성 작업 수 제한 (max 1) (active tasks: 1)
+  [WARN] open-assumptions — 미해결 가정이 남아 있다. 사실 확인 또는 인간 결정 필요 (공통 컴포넌트 후보와 실제 분리 범위는 아직 정하지 않았다.)

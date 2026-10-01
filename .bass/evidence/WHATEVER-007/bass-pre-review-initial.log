@@ -1,0 +1,3 @@
+[bass gate pre-review] task=WHATEVER-007 => FAILED
+  [PASS] status-review-ready — 인간 리뷰 준비는 ACTIVE 또는 REVIEW 상태에서 가능하다 (current status: ACTIVE)
+  [FAIL] run-record — run record 존재 (.bass/records/WHATEVER-007.json) (run record not found — 완료 근거 없이 DONE 처리할 수 없다)
