@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import Image from 'next/image';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
@@ -12,6 +11,7 @@ import { setCenter } from '../../../redux/slices/mapSlice';
 import { setRandomPlace, clearRandomPlace } from '../../../redux/slices/randomSlice';
 import PlaceModal from './placeModal';
 import { Place, KakaoPlace, PlaceType, KakaoPlaceResponse } from '../../../data/types';
+import IconButton from '../../components/IconButton';
 
 export default function FoodMap() {
   const [userLocation, setUserLocation] = useState<{
@@ -324,64 +324,48 @@ export default function FoodMap() {
       </div>
       <div className="absolute flex flex-col z-10 top-28 right-6 space-y-8">
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
-          <button
+          <IconButton
             type='button'
             className="p-1 w-11 h-11 bg-white rounded-[5px_5px_0px_0px] border-b-[rgba(0,0,0,0.10)] border-b border-solid"
             onClick={zoomIn}
-            aria-label="Zoom in"
-          >
-            <Image
-              src="/PlusIcon.svg"
-              alt="ZommIn"
-              width={35}
-              height={35}
-              className="object-contain"
-            />
-          </button>
-          <button
+            label='지도 확대'
+            src='/PlusIcon.svg'
+            imageWidth={35}
+            imageHeight={35}
+            imageClassName='object-contain'
+          />
+          <IconButton
             type='button'
             className="p-1 w-11 h-11 bg-white rounded-[0px_0px_5px_5px] border-t-[rgba(0,0,0,0.10)] border-t border-solid"
             onClick={zoomOut}
-            aria-label="Zoom out"
-          >
-            <Image
-              src="/MinusIcon.svg"
-              alt="ZommOut"
-              width={35}
-              height={35}
-              className="object-contain"
-            />
-          </button>
+            label='지도 축소'
+            src='/MinusIcon.svg'
+            imageWidth={35}
+            imageHeight={35}
+            imageClassName='object-contain'
+          />
         </div>
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>
-          <button
-          type='button'
-          className="p-2 w-11 h-11 bg-white rounded-[5px_5px_0px_0px] border-b-[rgba(0,0,0,0.10)] border-b border-solid"
-          onClick={handleResetLocation}
-          aria-label="Move to current location"
-        >
-          <Image
-            src="/LocationIcon.svg"
-            alt="Current location"
-            width={30}
-            height={30}
-            className="object-contain"
+          <IconButton
+            type='button'
+            className="p-2 w-11 h-11 bg-white rounded-[5px_5px_0px_0px] border-b-[rgba(0,0,0,0.10)] border-b border-solid"
+            onClick={handleResetLocation}
+            label='현재 위치로 이동'
+            src='/LocationIcon.svg'
+            imageWidth={30}
+            imageHeight={30}
+            imageClassName='object-contain'
           />
-        </button>
-        <button
-          type='button'
-          className="p-2 w-11 h-11 bg-white rounded-[0px_0px_5px_5px] border-t-[rgba(0,0,0,0.10)] border-t border-solid"
-          onClick={handleClearSelectedPlace}
-          aria-label="Clear All Marker"
-        >
-          <Image
-            src="/ClearMarkerIcon.svg"
-            alt="Clear All Marker"
-            width={30}
-            height={30}
-            className="object-contain"
+          <IconButton
+            type='button'
+            className="p-2 w-11 h-11 bg-white rounded-[0px_0px_5px_5px] border-t-[rgba(0,0,0,0.10)] border-t border-solid"
+            onClick={handleClearSelectedPlace}
+            label='모든 마커 지우기'
+            src='/ClearMarkerIcon.svg'
+            imageWidth={30}
+            imageHeight={30}
+            imageClassName='object-contain'
           />
-        </button>
         </div>
       </div>
     </section>

@@ -45,7 +45,9 @@
 
 - The menu roulette uses Framer Motion transitions.
 - The map flow includes search, bookmark, history, and random-selection controls.
-- Focus behavior and complete keyboard testing are not documented.
+- Shared icon-only actions use native buttons with accessible names; their images are decorative.
+- Place details use the native modal dialog behavior for focus, Escape, and backdrop dismissal.
+- A full keyboard and accessibility conformance review is not documented.
 
 ## Voice and microcopy
 
@@ -71,3 +73,4 @@
 
 - 2026-09-29: recorded current UI evidence; no new visual direction was selected.
 - 2026-09-30: recorded the user's cross-platform consistency goal and the requirement to retain menu selection if the landing page changes.
+- 2026-10-01: considered the [Airbnb marketplace reference](https://getdesign.md/airbnb/design-md); its palette and photography-led treatment were rejected for this product. The oh-my-design CLI is unavailable in this workspace, so no OMD visual candidate was produced. Selected direction: preserve the existing palette, typography, spacing, and layout while standardizing interaction semantics.
