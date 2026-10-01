@@ -1,0 +1,200 @@
+{
+  "record_version": 2,
+  "execution_contract": {
+    "contract_version": 1,
+    "plan_fingerprint": "dc5de91fa9d8ad8c704a7d6c8c0ff3fe8260246fd1584faad228b818f6c8c938",
+    "capability_calls": []
+  },
+  "capability_invocations": [],
+  "task_id": "WHATEVER-006",
+  "summary_of_changes": "TODO.md의 첫 항목을 공통 UI 컴포넌트 정리로 지정하고, 이후 항목은 미확정 제안으로 유지했다. 중복되거나 이전 작업 명세는 취소 상태로 정리했다.",
+  "why": "사용자가 기존 화면의 공통 컴포넌트 분리를 추가 기능 전의 첫 번째 우선순위로 선택했다.",
+  "files_changed": [
+    ".bass/events.jsonl",
+    ".bass/evidence/WHATEVER-006/bass-pre-review.log",
+    ".bass/evidence/WHATEVER-006/bass-pre-task.log",
+    ".bass/evidence/WHATEVER-006/bass-task-validate.log",
+    ".bass/evidence/WHATEVER-006/git-diff-check.log",
+    ".bass/evidence/WHATEVER-006/verification-summary.md",
+    ".bass/records/WHATEVER-006.json",
+    ".bass/tasks/WHATEVER-004.md",
+    ".bass/tasks/WHATEVER-005.md",
+    ".bass/tasks/WHATEVER-006.md",
+    "TODO.md"
+  ],
+  "models_used": [],
+  "verification": {
+    "evaluations_run": [
+      {
+        "name": "bass task validate WHATEVER-006",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "bass gate pre-task WHATEVER-006",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "git diff --check",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "Documentation acceptance review",
+        "level": 2,
+        "status": "pass"
+      },
+      {
+        "name": "bass gate pre-review WHATEVER-006",
+        "level": 1,
+        "status": "pass"
+      }
+    ],
+    "not_verified": [
+      "No application build or browser check was run because this task changes documentation only."
+    ]
+  },
+  "critic_findings": {
+    "total": 0,
+    "open_high_or_medium": 0
+  },
+  "known_limitations": [
+    "공통 컴포넌트 후보와 실제 분리 범위는 아직 정하지 않았다.",
+    "앱 빌드와 브라우저 동작은 이 문서 변경의 검증 범위가 아니다."
+  ],
+  "out_of_scope_findings": [],
+  "docs_updated": {
+    "needed": true,
+    "updated": [
+      "TODO.md"
+    ]
+  },
+  "lessons": {
+    "recorded": false,
+    "candidates": []
+  },
+  "rollback": {
+    "method": "TODO.md에서 추가한 첫 번째 우선순위를 되돌린다. BASS 실행 기록은 별도 변경으로 보존한다."
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "pass",
+      "started_at": "2026-09-30T08:42:59.642Z",
+      "completed_at": "2026-09-30T08:44:33.288Z"
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-006/bass-task-validate.log",
+      "sha256": "043e3e65d83195e3abae1d070db547875fd4af34ef929876e977808c58b05de6",
+      "produced_by": "bass task validate WHATEVER-006",
+      "at": "2026-09-30T08:49:01.827Z"
+    },
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-006/bass-pre-task.log",
+      "sha256": "a272fdce74cfd57f17d683ad3af5be64dd0ef20f45e30c2ac3c1d8d6f471df50",
+      "produced_by": "bass gate pre-task WHATEVER-006",
+      "at": "2026-09-30T08:49:01.827Z"
+    },
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-006/git-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "produced_by": "git diff --check",
+      "at": "2026-09-30T08:49:01.827Z"
+    },
+    {
+      "kind": "report",
+      "path": ".bass/evidence/WHATEVER-006/verification-summary.md",
+      "sha256": "c21d523eb68ab735661ff434dc2336bcb21ba3ab854a1da5a3a7e5c99f1ff9a7",
+      "produced_by": "Documentation acceptance review",
+      "at": "2026-09-30T08:49:53.637Z"
+    },
+    {
+      "kind": "log",
+      "path": ".bass/evidence/WHATEVER-006/bass-pre-review.log",
+      "sha256": "bd52f10ee5647ae9041609296601f13269fb724c341531428d41d8847dcf017d",
+      "produced_by": "bass gate pre-review WHATEVER-006 (REVIEW)",
+      "at": "2026-09-30T08:50:12.858Z"
+    }
+  ],
+  "context": {
+    "sources": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "8d73045b444954ef1da10259ea5783cf0af1b4eeb4f0f1bf38c0ca0beb8ed4dc",
+        "chars": 499
+      },
+      {
+        "path": "TODO.md",
+        "sha256": "f212ed07e85d4775630e985ee7b89ca187245c60b5b86c52445412b7e7d36e73",
+        "chars": 954
+      },
+      {
+        "path": "bass.yaml",
+        "sha256": "9943bcde39dd904dad88c810135500f33d4abbc150f42c6f1234bf9ef7a2c5a4",
+        "chars": 583
+      },
+      {
+        "path": ".bass/tasks/WHATEVER-004.md",
+        "sha256": "d3763c4ec769e5acf74bf4228807eacc48ee771a5559a2aa5e60e2f0c23ede0a",
+        "chars": 2525
+      },
+      {
+        "path": ".bass/tasks/WHATEVER-005.md",
+        "sha256": "827aae6ee12a65305b44290672b6db3be589c55503878855fb87c30c75a606db",
+        "chars": 2155
+      },
+      {
+        "path": ".bass/tasks/WHATEVER-006.md",
+        "sha256": "ac840d2ca5414fd8f4e1d2805e135b20838ea19cd974186efd9e56d1db792f34",
+        "chars": 2191
+      },
+      {
+        "path": ".bass/records/WHATEVER-004.json",
+        "sha256": "494c7f0b5ba57f2780eec25d1b2c16b13fddea46df43db587442105b9e47dfc6",
+        "chars": 5376
+      }
+    ],
+    "total_chars": 14283,
+    "omitted": []
+  },
+  "usage": {
+    "turns": "unknown",
+    "attempts": 1,
+    "input_tokens": "unknown",
+    "output_tokens": "unknown",
+    "cached_input_tokens": "unknown",
+    "evaluator_tokens": "unknown",
+    "tool_calls": "unknown",
+    "subagents": 0,
+    "estimated_cost": "unknown"
+  },
+  "scope": {
+    "actual_files": [
+      ".bass/events.jsonl",
+      ".bass/evidence/WHATEVER-006/bass-pre-review.log",
+      ".bass/evidence/WHATEVER-006/bass-pre-task.log",
+      ".bass/evidence/WHATEVER-006/bass-task-validate.log",
+      ".bass/evidence/WHATEVER-006/git-diff-check.log",
+      ".bass/evidence/WHATEVER-006/verification-summary.md",
+      ".bass/records/WHATEVER-006.json",
+      ".bass/tasks/WHATEVER-004.md",
+      ".bass/tasks/WHATEVER-005.md",
+      ".bass/tasks/WHATEVER-006.md",
+      "TODO.md"
+    ],
+    "outside_allowed": [],
+    "forbidden_touched": []
+  },
+  "human_approval": {
+    "approved": true,
+    "approver": "user",
+    "at": "2026-10-01T06:19:03.147Z",
+    "notes": "사용자가 공통 UI 우선순위 변경을 승인하고 develop 커밋·푸시를 요청함."
+  }
+}
