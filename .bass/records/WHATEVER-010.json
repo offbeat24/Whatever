@@ -1,0 +1,292 @@
+{
+  "record_version": 2,
+  "execution_contract": {
+    "contract_version": 1,
+    "plan_fingerprint": "9b2b606a897fd9e34c569f5efb126881f50144a282b929a1cd382b8de817064d",
+    "capability_calls": [
+      "ponytail:full"
+    ]
+  },
+  "capability_invocations": [
+    {
+      "call_id": "f55e8399b56ead1cb3ad2e6ab264b73edf3892fdbfdcd9e199b5393a474c7bb5",
+      "attempt": 2,
+      "capability_call": "ponytail:full",
+      "host": "codex",
+      "status": "pass",
+      "summary": "Re-reviewed the scoped map and roulette diff; no additional abstraction or dependency was needed",
+      "evidence_path": ".bass/evidence/WHATEVER-010/ponytail-review.md"
+    }
+  ],
+  "task_id": "WHATEVER-010",
+  "summary_of_changes": "Refresh restaurant candidates only when map bounds change, deduplicate Kakao place IDs, select roulette results from current candidates, and temporarily avoid the five most recent picks.",
+  "why": "Prevent stale or repeated roulette results while keeping the current Kakao Maps provider and avoiding an extra place-search request per spin.",
+  "files_changed": [
+    ".bass/events.jsonl",
+    ".bass/evidence/WHATEVER-010/after-screenshot-metadata.json",
+    ".bass/evidence/WHATEVER-010/after-viewport.png",
+    ".bass/evidence/WHATEVER-010/before-screenshot-metadata.json",
+    ".bass/evidence/WHATEVER-010/before-viewport.png",
+    ".bass/evidence/WHATEVER-010/console-after.json",
+    ".bass/evidence/WHATEVER-010/console-before.json",
+    ".bass/evidence/WHATEVER-010/ponytail-review.md",
+    ".bass/evidence/WHATEVER-010/random-viewport.png",
+    ".bass/evidence/WHATEVER-010/verification-summary.md",
+    ".bass/evidence/WHATEVER-010/yarn-build.log",
+    ".bass/evidence/WHATEVER-010/yarn-lint-default-props-failure.log",
+    ".bass/evidence/WHATEVER-010/yarn-lint.log",
+    ".bass/records/WHATEVER-010.json",
+    ".bass/tasks/WHATEVER-010.md",
+    "src/app/components/roulette.tsx",
+    "src/app/random/components/map.tsx"
+  ],
+  "models_used": [],
+  "verification": {
+    "evaluations_run": [
+      {
+        "name": "yarn lint",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "yarn build",
+        "level": 2,
+        "status": "pass"
+      },
+      {
+        "name": "git diff --check",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "BASS task validate and pre-task gate",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "BSK /random rendered viewport and before/after console comparison",
+        "level": 2,
+        "status": "pass"
+      },
+      {
+        "name": "Map search caller review and roulette no-search path",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "ponytail:full active review and completion",
+        "level": 1,
+        "status": "pass"
+      },
+      {
+        "name": "Manual map movement and roulette button browser interaction",
+        "level": 2,
+        "status": "skipped"
+      }
+    ],
+    "not_verified": [
+      "Map movement and roulette button behavior were not manually exercised in the browser; the acceptance paths were reviewed in source, and rendered UI plus lint/build were verified.",
+      "The three pre-existing browser console error signatures (browser extension and Next.js hydration warning) remain; the before/after signatures were identical and no new signature appeared."
+    ]
+  },
+  "critic_findings": {
+    "total": 0,
+    "open_high_or_medium": 0,
+    "report_path": ".bass/evidence/WHATEVER-010/verification-summary.md"
+  },
+  "known_limitations": [
+    "Recent-pick exclusion is scoped to the current map screen session and is not persisted.",
+    "Kakao category search still returns only the provider pages requested by the existing search flow."
+  ],
+  "out_of_scope_findings": [],
+  "docs_updated": {
+    "needed": false,
+    "updated": []
+  },
+  "lessons": {
+    "recorded": false,
+    "candidates": []
+  },
+  "rollback": {
+    "method": "Revert the resulting commit on develop; no persistent data or provider configuration changes were made."
+  },
+  "design": {
+    "rendered_verification": true,
+    "environment": "BSK Agent Window, local /random route",
+    "notes": "717x484 CSS viewport (1434x968 screenshot raster at 2x); map, roulette and controls rendered. Three baseline console signatures matched before and after.",
+    "evidence_paths": [
+      ".bass/evidence/WHATEVER-010/before-viewport.png",
+      ".bass/evidence/WHATEVER-010/after-viewport.png",
+      ".bass/evidence/WHATEVER-010/console-before.json",
+      ".bass/evidence/WHATEVER-010/console-after.json"
+    ],
+    "viewports": [
+      "717x484 CSS pixels (1434x968 raster, 2x)"
+    ],
+    "console_errors": 3,
+    "console_error_comparison": {
+      "conditions": "Same BSK Agent Window tab, local /random route and 717x484 CSS viewport; capture on baseline source before and final source after.",
+      "before_signatures": [
+        "ce01ae4f3f22af2111d16d50ee65745291705e926f1f969ea31bc46db1acae64",
+        "f6e9f0764beecce8509334dedb626fe5ff1c341244f87e553106a435889ac146",
+        "64c3117fe897e1d0060c724e5715f770bc3476a9d502fa6241769ca7d5664781"
+      ],
+      "after_signatures": [
+        "ce01ae4f3f22af2111d16d50ee65745291705e926f1f969ea31bc46db1acae64",
+        "f6e9f0764beecce8509334dedb626fe5ff1c341244f87e553106a435889ac146",
+        "64c3117fe897e1d0060c724e5715f770bc3476a9d502fa6241769ca7d5664781"
+      ],
+      "before_evidence_paths": [
+        ".bass/evidence/WHATEVER-010/console-before.json"
+      ],
+      "after_evidence_paths": [
+        ".bass/evidence/WHATEVER-010/console-after.json"
+      ]
+    }
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "pass",
+      "started_at": "2026-10-02T07:42:39.147Z",
+      "completed_at": "2026-10-02T08:20:34.802Z"
+    },
+    {
+      "attempt": 2,
+      "status": "pass",
+      "started_at": "2026-10-02T08:24:07.444Z",
+      "completed_at": "2026-10-02T08:25:06.316Z"
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "after-screenshot-metadata",
+      "path": ".bass/evidence/WHATEVER-010/after-screenshot-metadata.json",
+      "sha256": "a78c06374a013def8719e6401ee61fa034825a06a632aa99645474366a2a675d",
+      "produced_by": "BSK browser capture metadata or console comparison",
+      "at": "2026-10-02T07:56:10.001Z"
+    },
+    {
+      "kind": "after-viewport",
+      "path": ".bass/evidence/WHATEVER-010/after-viewport.png",
+      "sha256": "172dabce31e25892abd5b63db11b4ab02271767b2ff24a7ec12a5723d7a8641d",
+      "produced_by": "BSK browser viewport capture",
+      "at": "2026-10-02T07:56:10.000Z"
+    },
+    {
+      "kind": "before-screenshot-metadata",
+      "path": ".bass/evidence/WHATEVER-010/before-screenshot-metadata.json",
+      "sha256": "eb9a92dde81392ec60ad3fd9d834aec63f0ad2c24f156811ac835949bdf6c635",
+      "produced_by": "BSK browser capture metadata or console comparison",
+      "at": "2026-10-02T07:55:24.126Z"
+    },
+    {
+      "kind": "before-viewport",
+      "path": ".bass/evidence/WHATEVER-010/before-viewport.png",
+      "sha256": "f3fa4e3f4713af4835f23c40c07d9fc7af1fa320658f8ff63072941821ddfb20",
+      "produced_by": "BSK browser viewport capture",
+      "at": "2026-10-02T07:55:24.126Z"
+    },
+    {
+      "kind": "console-after",
+      "path": ".bass/evidence/WHATEVER-010/console-after.json",
+      "sha256": "d84aa15d482e69bef719aa554cb86ac51cdcad7a559b6cc438dded59ac2006df",
+      "produced_by": "BSK browser capture metadata or console comparison",
+      "at": "2026-10-02T07:56:10.019Z"
+    },
+    {
+      "kind": "console-before",
+      "path": ".bass/evidence/WHATEVER-010/console-before.json",
+      "sha256": "dcabc4a845fc4baf76dd17a0352117d7ff275238e413e2a22d23f518e832361e",
+      "produced_by": "BSK browser capture metadata or console comparison",
+      "at": "2026-10-02T07:55:24.138Z"
+    },
+    {
+      "kind": "ponytail-review",
+      "path": ".bass/evidence/WHATEVER-010/ponytail-review.md",
+      "sha256": "88a0a0a3b0146c817051bf09a50aba6be8013fc9771b930e73fc9c5c59c2684f",
+      "produced_by": "ponytail:full capability review",
+      "at": "2026-10-02T08:24:58.784Z"
+    },
+    {
+      "kind": "random-viewport",
+      "path": ".bass/evidence/WHATEVER-010/random-viewport.png",
+      "sha256": "40ae3b29ae3ed6dd5eb88cb4ec673b19de34ae5296ab9852be75050f3a419aee",
+      "produced_by": "BSK browser viewport capture",
+      "at": "2026-10-02T07:54:15.234Z"
+    },
+    {
+      "kind": ".bass/evidence/WHATEVER-010/verification-summary.md",
+      "path": ".bass/evidence/WHATEVER-010/verification-summary.md",
+      "sha256": "24f35c55c1e81262bd1d6ba7eadd91eed3531c4c14ae0ed4b29586785c1ee0fa",
+      "produced_by": "task verification summary",
+      "at": "2026-10-02T08:24:58.816Z"
+    },
+    {
+      "kind": "yarn-build",
+      "path": ".bass/evidence/WHATEVER-010/yarn-build.log",
+      "sha256": "e5b441cc0200e9a142f706967b0532c6c013c0e99839932fc5e11c92497a1b91",
+      "produced_by": "project verification command output",
+      "at": "2026-10-02T08:28:44.814Z"
+    },
+    {
+      "kind": "yarn-lint-default-props-failure",
+      "path": ".bass/evidence/WHATEVER-010/yarn-lint-default-props-failure.log",
+      "sha256": "77466293d8cdf2ce0c4c5269e48f21b076d88901e302da31c426c409c170102b",
+      "produced_by": "project verification command output",
+      "at": "2026-10-02T08:19:05.440Z"
+    },
+    {
+      "kind": "yarn-lint",
+      "path": ".bass/evidence/WHATEVER-010/yarn-lint.log",
+      "sha256": "126461655dea274e8fd1cbc5d718d82dc6d4bec6d9cc7a0696270bf8b8130728",
+      "produced_by": "project verification command output",
+      "at": "2026-10-02T08:19:25.124Z"
+    }
+  ],
+  "context": {
+    "sources": [],
+    "total_chars": 0,
+    "omitted": []
+  },
+  "usage": {
+    "turns": "unknown",
+    "attempts": "unknown",
+    "input_tokens": "unknown",
+    "output_tokens": "unknown",
+    "cached_input_tokens": "unknown",
+    "evaluator_tokens": "unknown",
+    "tool_calls": "unknown",
+    "subagents": "unknown",
+    "estimated_cost": "unknown"
+  },
+  "scope": {
+    "actual_files": [
+      ".bass/events.jsonl",
+      ".bass/evidence/WHATEVER-010/after-screenshot-metadata.json",
+      ".bass/evidence/WHATEVER-010/after-viewport.png",
+      ".bass/evidence/WHATEVER-010/before-screenshot-metadata.json",
+      ".bass/evidence/WHATEVER-010/before-viewport.png",
+      ".bass/evidence/WHATEVER-010/console-after.json",
+      ".bass/evidence/WHATEVER-010/console-before.json",
+      ".bass/evidence/WHATEVER-010/ponytail-review.md",
+      ".bass/evidence/WHATEVER-010/random-viewport.png",
+      ".bass/evidence/WHATEVER-010/verification-summary.md",
+      ".bass/evidence/WHATEVER-010/yarn-build.log",
+      ".bass/evidence/WHATEVER-010/yarn-lint-default-props-failure.log",
+      ".bass/evidence/WHATEVER-010/yarn-lint.log",
+      ".bass/records/WHATEVER-010.json",
+      ".bass/tasks/WHATEVER-010.md",
+      "src/app/components/roulette.tsx",
+      "src/app/random/components/map.tsx"
+    ],
+    "outside_allowed": [],
+    "forbidden_touched": []
+  },
+  "human_approval": {
+    "approved": true,
+    "approver": "user",
+    "at": "2026-10-02T08:26:50.390Z",
+    "notes": "Explicit user instruction: complete the map candidate work on a branch and merge it into develop."
+  }
+}

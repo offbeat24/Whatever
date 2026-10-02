@@ -1,0 +1,18 @@
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+
+
+   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+   The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+   	- target was set to ES2017 (For top-level `await`. Note: Next.js only polyfills for the esmodules target.)
+
+
+./src/app/components/roulette.tsx
+11:3  Error: propType "recentPlaceIds" is not required, but has no corresponding defaultProps declaration.  react/require-default-props
+12:3  Error: propType "onPlaceRandom" is not required, but has no corresponding defaultProps declaration.  react/require-default-props
+13:3  Error: propType "onAddHistory" is not required, but has no corresponding defaultProps declaration.  react/require-default-props
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
