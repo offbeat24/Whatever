@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map as KakaoMap, MapMarker } from 'react-kakao-maps-sdk';
 import { RootState } from '../../../redux/store';
 import useKakaoLoader from '../../../hooks/useKakaoLoader';
 import Roulette from '../../components/roulette';
@@ -26,10 +26,12 @@ export default function FoodMap() {
     longitude: 126.950783269518
   });
   const [places, setPlaces] = useState<KakaoPlace[]>([]);
-  const [mapLoaded, setMapLoaded] = useState(false); 
+  const [recentlyDrawnIds, setRecentlyDrawnIds] = useState<string[]>([]);
   const [showMyLocationPin, setShowMyLocationPin] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<Place | null>(null);
   const mapRef = useRef<kakao.maps.Map>(null);
+  const lastRequestedBounds = useRef<string | null>(null);
+  const latestPlacesRequest = useRef(0);
 
   const center = useSelector((state: RootState) => state.map.center);
   const randomPlace = useSelector((state: RootState) => state.random.randomPlace);
@@ -53,8 +55,21 @@ export default function FoodMap() {
   }
 
   const fetchPlaces = async () => {
-    if (!mapRef.current) return;
-    const bounds = mapRef.current.getBounds();
+    const map = mapRef.current;
+    if (!map) return;
+    const bounds = map.getBounds();
+    const southWest = bounds.getSouthWest();
+    const northEast = bounds.getNorthEast();
+    const boundsKey = [
+      southWest.getLat(),
+      southWest.getLng(),
+      northEast.getLat(),
+      northEast.getLng(),
+    ].map((coordinate) => coordinate.toFixed(6)).join(',');
+    if (boundsKey === lastRequestedBounds.current) return;
+    lastRequestedBounds.current = boundsKey;
+    latestPlacesRequest.current += 1;
+    const requestId = latestPlacesRequest.current;
     const ps = new window.kakao.maps.services.Places(); 
     const promises = [1, 2, 3].map((pages) =>
       new Promise((resolve) => {
@@ -75,21 +90,24 @@ export default function FoodMap() {
     try {
       const results = await Promise.all(promises);
       const allResults = results.flat() as KakaoPlaceResponse[];
-      // y, x를 number로 변환
-      const convertedPlaces: KakaoPlace[] = allResults.map(place => ({
-        ...place,
-        y: typeof place.y === 'string' ? parseFloat(place.y) : place.y,
-        x: typeof place.x === 'string' ? parseFloat(place.x) : place.x,
-      }));
-      if (convertedPlaces.length > 0) {
-        setPlaces(convertedPlaces);
-        // console.log("data 준비완료")
-      } else {
-        // console.warn("No places found in the current bounds.");
-        setPlaces([]); 
+      const uniquePlaces = new Map<string, KakaoPlace>();
+      allResults.forEach((place) => {
+        if (!uniquePlaces.has(place.id)) {
+          uniquePlaces.set(place.id, {
+            ...place,
+            y: typeof place.y === 'string' ? parseFloat(place.y) : place.y,
+            x: typeof place.x === 'string' ? parseFloat(place.x) : place.x,
+          });
+        }
+      });
+      if (requestId === latestPlacesRequest.current) {
+        setPlaces(Array.from(uniquePlaces.values()));
       }
     } catch (error) {
-      // console.error("Failed to fetch places: ", error);
+      if (requestId === latestPlacesRequest.current) {
+        lastRequestedBounds.current = null;
+        setPlaces([]);
+      }
     }
   };
 
@@ -98,6 +116,7 @@ export default function FoodMap() {
   }, []);
 
   const handlePlaceRandom = (place: KakaoPlace) => {
+    setRecentlyDrawnIds((ids) => [place.id, ...ids.filter((id) => id !== place.id)].slice(0, 5));
     // dispatch(clearSelectedPlaces());
     const placeData: Place = {
       id: place.id,
@@ -120,11 +139,7 @@ export default function FoodMap() {
 
   const handleMapLoad = () => {
     if (mapRef.current){
-      // console.log("지도로드완료")
-      if (!mapLoaded) {
-        setMapLoaded(true);
-        fetchPlaces(); // 지도 로드 상태를 true로 설정합니다.
-      }
+      fetchPlaces();
     }
   };
 
@@ -227,7 +242,7 @@ export default function FoodMap() {
   
   return(
     <section className="relative w-full h-screen">
-      <Map
+      <KakaoMap
         id="map"
         center={{
           lat: loc?.latitude!,
@@ -241,6 +256,7 @@ export default function FoodMap() {
         isPanto={panto}
         level={3}
         onCreate={handleMapLoad}
+        onIdle={fetchPlaces}
         ref={mapRef}
       >
         {randomPlace && (
@@ -304,7 +320,7 @@ export default function FoodMap() {
             }}
           />
         )}
-      </Map>
+      </KakaoMap>
       {selectedMarker && (
         <PlaceModal
           place={selectedMarker}
@@ -320,7 +336,7 @@ export default function FoodMap() {
       tablet:h-16 tablet:w-[18.75rem] tablet:text-[1.5rem] 
       mobile:w-[16rem] mobile:h-[3.125rem] mobile:text-[1.3rem]
       bg-orange-o3 shadow-[6px_6px_10px_0px_rgba(0,0,0,0.15)] text-white rounded-[85px] font-extrabold text-[2.625rem] ">
-        <Roulette textData={[]} dataFromMap={places} onShuffle={fetchPlaces} onPlaceRandom={handlePlaceRandom} onAddHistory={handleAddHistory}/>
+        <Roulette textData={[]} dataFromMap={places} recentPlaceIds={recentlyDrawnIds} onPlaceRandom={handlePlaceRandom} onAddHistory={handleAddHistory}/>
       </div>
       <div className="absolute flex flex-col z-10 top-28 right-6 space-y-8">
         <div className='flex flex-col w-11 h-[5.5rem] [filter:drop-shadow(2px_2px_10px_rgba(0,0,0,0.30))]'>

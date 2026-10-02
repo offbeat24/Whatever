@@ -8,15 +8,16 @@ import { KakaoPlace } from '../../data/types';
 interface Props {
   textData : string[],
   dataFromMap : KakaoPlace[] | undefined,
-  onShuffle? : () => Promise<void>,
+  recentPlaceIds?: string[],
   onPlaceRandom?: (place: KakaoPlace) => void,
   onAddHistory?: (place: KakaoPlace) => void,
 }
 
-export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlaceRandom, onAddHistory }: Props): React.JSX.Element {
+export default function Roulette({ textData, dataFromMap = [], recentPlaceIds = [], onPlaceRandom, onAddHistory }: Props): React.JSX.Element {
   const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [initialTextDisplayed, setInitialTextDisplayed] = useState(true);
+  const [activePlaces, setActivePlaces] = useState<KakaoPlace[] | null>(null);
   const maxIndexCount = 24;
   const executedRef = useRef(false);
 
@@ -43,17 +44,19 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
     return name
   }
 
-  const data = textData.length > 0 ? textData : dataFromMap.map(place => formatPlaceName(place.place_name));
+  const recentIds = Array.from(new Set(recentPlaceIds)).slice(0, 5);
+  const recentIdSet = new Set(recentIds);
+  const availablePlaces = dataFromMap.filter((place) => !recentIdSet.has(place.id));
+  const targetCount = Math.min(maxIndexCount, dataFromMap.length);
+  const placesToRestore = recentIds.slice().reverse()
+    .map((id) => dataFromMap.find((place) => place.id === id))
+    .filter((place): place is KakaoPlace => place !== undefined);
+  const currentPlaces = availablePlaces.length >= targetCount
+    ? availablePlaces
+    : [...availablePlaces, ...placesToRestore.slice(0, targetCount - availablePlaces.length)];
+  const displayedPlaces = activePlaces ?? currentPlaces;
+  const data = textData.length > 0 ? textData : displayedPlaces.map(place => formatPlaceName(place.place_name));
   const itemsToShow = randomIndices.map(index => data[index]);
-
-  useEffect(() => {
-    if (!initialTextDisplayed && data.length > 0) {
-      const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
-      setRandomIndices(newIndices);
-      setCurrentIndex(0);
-      executedRef.current = false;
-    }
-  }, [data.length, initialTextDisplayed]); 
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null; // 인터벌 ID를 로컬 변수로 선언
@@ -63,12 +66,10 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
         setCurrentIndex((prev) => (prev + 1) % itemsToShow.length);
       }, getDuration(10, currentIndex));
     } else if (currentIndex === itemsToShow.length - 1 && itemsToShow.length > 0 && !executedRef.current) {
-      const randomPlace = dataFromMap[randomIndices[currentIndex]];
-      if (onPlaceRandom) {
-        onPlaceRandom(randomPlace);
-      }
-      if (onAddHistory) {
-        onAddHistory(randomPlace);
+      const randomPlace = displayedPlaces[randomIndices[currentIndex]];
+      if (randomPlace) {
+        onPlaceRandom?.(randomPlace);
+        onAddHistory?.(randomPlace);
       }
       executedRef.current = true;
     }
@@ -80,22 +81,21 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex, itemsToShow.length]);
+  }, [currentIndex, itemsToShow.length, randomIndices]);
   
 
-  const handleClick = async () => {
-    if (onShuffle) {
-      await onShuffle();
-    }
-    if (data.length > 0) {
-      const newIndices = getRandomNumbers(Math.min(maxIndexCount, data.length), 0, data.length - 1);
-      setRandomIndices(newIndices);
-      setCurrentIndex(0);
-      setInitialTextDisplayed(false);
-      executedRef.current = false;
-    } else {
-      // console.warn("No data available to shuffle.");
-    }
+  const handleClick = () => {
+    const placesForSpin = currentPlaces;
+    const dataForSpin = textData.length > 0
+      ? textData
+      : placesForSpin.map(place => formatPlaceName(place.place_name));
+    if (dataForSpin.length === 0) return;
+
+    if (textData.length === 0) setActivePlaces(placesForSpin);
+    setRandomIndices(getRandomNumbers(Math.min(maxIndexCount, dataForSpin.length), 0, dataForSpin.length - 1));
+    setCurrentIndex(0);
+    setInitialTextDisplayed(false);
+    executedRef.current = false;
   };
 
   
@@ -178,6 +178,6 @@ export default function Roulette({ textData, dataFromMap = [], onShuffle, onPlac
 
 Roulette.defaultProps = {
   onAddHistory: () => {},
-  onShuffle: async () => {},
   onPlaceRandom: () => {},
+  recentPlaceIds: [],
 };

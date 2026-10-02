@@ -1,0 +1,136 @@
+{
+  "tab_id": 1337889461,
+  "entries": [
+    {
+      "sequence": 23,
+      "kind": "console",
+      "level": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js",
+      "line": 197,
+      "column": 29,
+      "timestamp": 1790927732566.668,
+      "truncated": false
+    },
+    {
+      "sequence": 24,
+      "kind": "console",
+      "level": "log",
+      "text": "[Fast Refresh] done in 415ms",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js",
+      "line": 14,
+      "column": 13,
+      "timestamp": 1790927732981.533,
+      "truncated": false
+    },
+    {
+      "sequence": 25,
+      "kind": "log",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "url": "chrome-extension://invalid/",
+      "timestamp": 1790927740899.809,
+      "truncated": false
+    },
+    {
+      "sequence": 26,
+      "kind": "log",
+      "level": "error",
+      "text": "Permissions policy violation: unload is not allowed in this document.",
+      "url": "chrome-extension://mbnbehikldjhnfehhnaidhjhoofhpehk/inspector.b9415ea5.js",
+      "line": 405,
+      "timestamp": 1790927741109.54,
+      "truncated": false
+    },
+    {
+      "sequence": 27,
+      "kind": "console",
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js",
+      "line": 25631,
+      "column": 17,
+      "timestamp": 1790927741195.79,
+      "truncated": true
+    },
+    {
+      "sequence": 28,
+      "kind": "console",
+      "level": "error",
+      "text": "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <HotReload assetPrefix=\"\" globalError={[...]}>\n      <AppDevOverlayErrorBoundary globalError={[...]}>\n        <ReplaySsrOnlyErrors>\n        <DevRootHTTPAccessFallbackBoundary>\n          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>\n            <HTTPAccessFallbackErrorBoundary pathname",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js",
+      "line": 57,
+      "column": 32,
+      "timestamp": 1790927741241.994,
+      "truncated": true
+    },
+    {
+      "sequence": 29,
+      "kind": "console",
+      "level": "warning",
+      "text": "Image with src \"/logo_vertical.svg\" has legacy prop \"layout\". Did you forget to run the codemod?\nRead more: https://nextjs.org/docs/messages/next-image-upgrade-to-13",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js",
+      "line": 16,
+      "column": 21,
+      "timestamp": 1790927741246.544,
+      "truncated": false
+    },
+    {
+      "sequence": 30,
+      "kind": "console",
+      "level": "warning",
+      "text": "Image with src \"/SearchText.svg\" has legacy prop \"layout\". Did you forget to run the codemod?\nRead more: https://nextjs.org/docs/messages/next-image-upgrade-to-13",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js",
+      "line": 16,
+      "column": 21,
+      "timestamp": 1790927741247.497,
+      "truncated": false
+    },
+    {
+      "sequence": 31,
+      "kind": "console",
+      "level": "warning",
+      "text": "Image with src \"/BookmarkText.svg\" has legacy prop \"layout\". Did you forget to run the codemod?\nRead more: https://nextjs.org/docs/messages/next-image-upgrade-to-13",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js",
+      "line": 16,
+      "column": 21,
+      "timestamp": 1790927741247.877,
+      "truncated": false
+    },
+    {
+      "sequence": 32,
+      "kind": "console",
+      "level": "warning",
+      "text": "Image with src \"/HistoryText.svg\" has legacy prop \"layout\". Did you forget to run the codemod?\nRead more: https://nextjs.org/docs/messages/next-image-upgrade-to-13",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js",
+      "line": 16,
+      "column": 21,
+      "timestamp": 1790927741248.22,
+      "truncated": false
+    },
+    {
+      "sequence": 33,
+      "kind": "console",
+      "level": "log",
+      "text": "%c[rhwp]%c DevTools 사용 가능 — rhwpDev.help() 로 시작하세요 color:#2563eb;font-weight:bold color:inherit",
+      "url": "chrome-extension://pgakpjflombjmehnebnbpnalhegaanag/dev-tools-inject.js",
+      "line": 154,
+      "column": 11,
+      "timestamp": 1790927741294.16,
+      "truncated": false
+    },
+    {
+      "sequence": 34,
+      "kind": "console",
+      "level": "warning",
+      "text": "Image with src \"/MinusIcon.svg\" was detected as the Largest Contentful Paint (LCP). Please add the \"priority\" property if this image is above the fold.\nRead more: https://nextjs.org/docs/api-reference/next/image#priority",
+      "url": "webpack-internal:///(app-pages-browser)/./node_modules/next/dist/shared/lib/utils/warn-once.js",
+      "line": 16,
+      "column": 21,
+      "timestamp": 1790927741316.903,
+      "truncated": false
+    }
+  ],
+  "next_since": 34,
+  "truncated": true
+}
